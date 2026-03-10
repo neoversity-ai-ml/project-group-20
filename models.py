@@ -122,8 +122,8 @@ class AddressBook(UserDict):
         else:
             raise KeyError
 
-    def get_upcoming_birthdays(self):
-        """Returns contacts with birthdays in the upcoming week, grouped by day."""
+    def get_upcoming_birthdays(self, days):
+        """Returns contacts with birthdays in the upcoming requested period, grouped by day."""
 
         birthdays_by_day = defaultdict(list)
         today = date.today()
@@ -135,7 +135,7 @@ class AddressBook(UserDict):
                     birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
                 delta_days = (birthday_this_year - today).days
-                if 0 <= delta_days < 7:
+                if 0 <= delta_days < days:
                     day_of_week = birthday_this_year.strftime('%A')
                     if day_of_week in ['Saturday', 'Sunday']:
                         day_of_week = 'Monday'

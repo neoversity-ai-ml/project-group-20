@@ -81,11 +81,17 @@ def show_birthday(args, book: AddressBook):
     raise KeyError
 
 
-def birthdays(book: AddressBook):
+def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
-    birthdays_by_day = book.get_upcoming_birthdays()
+    days, = args
+    days = int(days)
+
+    if days <= 0:
+        raise ValueError("Days must be a positive number.")
+    
+    birthdays_by_day = book.get_upcoming_birthdays(days)
     if not birthdays_by_day:
-        return "No upcoming birthdays in the next week."
+        return "No upcoming birthdays during requested period."
 
     output = []
     week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -93,7 +99,7 @@ def birthdays(book: AddressBook):
         if birthdays_by_day[day]:
             output.append(f"{day}: {', '.join(birthdays_by_day[day])}")
 
-    return "\n".join(output) if output else "No upcoming birthdays in the next week."
+    return "\n".join(output) if output else "No upcoming birthdays during requested period."
 
 
 def main():
@@ -128,10 +134,13 @@ def main():
         elif command == "show-birthday":
             print(show_birthday(args, book))
         elif command == "birthdays":
-            print(birthdays(book))
+            print(birthdays(args, book))
         else:
             print("Invalid command.")
 
 
 if __name__ == "__main__":
     main()
+
+
+
