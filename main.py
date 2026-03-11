@@ -104,6 +104,17 @@ def birthdays(args, book: AddressBook):
 
     return "\n".join(output) if output else "No upcoming birthdays during requested period."
 
+@input_error
+def add_address(args, book: AddressBook):
+    if len(args) != 2:
+        raise ValueError("Please provide name and address: name address.")
+    
+    name, address = args
+    record = book.find(name)
+    if record:
+        record.add_address(address)
+        return "Address added."
+    raise KeyError
 
 def main():
     """Main function to run the assistant bot."""
@@ -138,6 +149,8 @@ def main():
             print(show_birthday(args, book))
         elif command == "birthdays":
             print(birthdays(args, book))
+        elif command == "add-address":
+            print(add_address(args, book))
         else:
             print("Invalid command.")
 

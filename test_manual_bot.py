@@ -6,6 +6,7 @@ from main import (
     add_birthday,
     show_birthday,
     birthdays,
+    add_address,
 )
 from models import AddressBook
 from datetime import datetime, timedelta
@@ -27,6 +28,19 @@ print(show_birthday(["John"], book))
 print(add_birthday(["Jack", (datetime.today() + timedelta(days=15)).strftime("%d.%m.%Y")], book))
 print(add_birthday(["Bob", (datetime.today() + timedelta(days=1)).strftime("%d.%m.%Y")], book))
 print(add_birthday(["Bobs", (datetime.today() + timedelta(days=3)).strftime("%d.%m.%Y")], book))
+
+# valid cases
+print(add_address(["John", "Main St, Kyiv, 01001, Ukraine"], book))
+print(add_address(["Bob", "Baker St, London, NW1 6XE, UK"], book))
+
+# contact not found
+print(add_address(["Unknown", "Some St, City, 00000, Country"], book))
+
+# too few arguments (only name, no address)
+print(add_address(["John"], book))
+
+# no arguments at all
+print(add_address([], book))
 
 print(show_all(book))
 print(birthdays(["10"], book))
