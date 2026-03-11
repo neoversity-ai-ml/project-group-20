@@ -28,18 +28,20 @@ class Phone(Field):
     >>> Phone("invalid-phone")
     Traceback (most recent call last):
         ...
-    ValueError: Phone number must be 10 digits.
+    ValueError: Phone number must be 10 digits, optionally starting with +.
     >>> Phone("12345")
     Traceback (most recent call last):
         ...
-    ValueError: Phone number must be 10 digits.
+    ValueError: Phone number must be 10 digits, optionally starting with +.
     """
 
     def __init__(self, value):
-        if not re.fullmatch(r'\+?\d{10}', value):
-            raise ValueError("Phone number must be 10 digits, optionally starting with +.")
-        digits = value.lstrip('+')
-        if digits[0] == '0':
+        if not re.fullmatch(r"\+?\d{10}", value):
+            raise ValueError(
+                "Phone number must be 10 digits, optionally starting with +."
+            )
+        digits = value.lstrip("+")
+        if digits[0] == "0":
             raise ValueError("Phone number cannot start with 0.")
         if len(set(digits)) == 1:
             raise ValueError("Phone number cannot consist of all identical digits.")
@@ -48,11 +50,13 @@ class Phone(Field):
     def __repr__(self):
         return f"Phone('{self.value}')"
 
+
 class Email(Field):
     def __init__(self, value):
         if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value):
             raise ValueError("Invalid email address format.")
         super().__init__(value)
+
 
 class Birthday(Field):
     """
@@ -116,7 +120,6 @@ class Record:
     def add_address(self, address):
         self.address = Address(address)
 
-
     def add_email(self, email):
         self.email = Email(email)
 
@@ -127,12 +130,14 @@ class Record:
         email_str = f", email: {self.email}" if self.email else ""
         return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}{email_str}"
 
+
 class Address(Field):
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
         return self.value
+
 
 class AddressBook(UserDict):
     """Class for managing an address book of contacts."""
@@ -164,16 +169,16 @@ class AddressBook(UserDict):
                 delta_days = (birthday_this_year - today).days
                 if 0 <= delta_days < days:
                     congratulation_date = birthday_this_year
-                    if congratulation_date.strftime('%A') in ['Saturday', 'Sunday']:
+                    if congratulation_date.strftime("%A") in ["Saturday", "Sunday"]:
                         days_until_monday = (7 - congratulation_date.weekday()) % 7
-                        congratulation_date = congratulation_date + timedelta(days=days_until_monday)
-                    upcoming.append({"name": record.name.value, "congratulation_date": congratulation_date})
+                        congratulation_date = congratulation_date + timedelta(
+                            days=days_until_monday
+                        )
+                    upcoming.append(
+                        {
+                            "name": record.name.value,
+                            "congratulation_date": congratulation_date,
+                        }
+                    )
 
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
-
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
