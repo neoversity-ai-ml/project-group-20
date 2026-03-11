@@ -43,6 +43,11 @@ class Phone(Field):
     def __repr__(self):
         return f"Phone('{self.value}')"
 
+class Email(Field):
+    def __init__(self, value):
+        if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError("Invalid email address format.")
+        super().__init__(value)
 
 class Birthday(Field):
     """
@@ -74,6 +79,7 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
+        self.email = None
 
     def add_phone(self, phone_number):
         self.phones.append(Phone(phone_number))
@@ -101,10 +107,14 @@ class Record:
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
+    def add_email(self, email):
+        self.email = Email(email)
+
     def __str__(self):
         phones_str = '; '.join(p.value for p in self.phones)
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
-        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}"
+        email_str = f", email: {self.email}" if self.email else ""
+        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{email_str}"
 
 
 class AddressBook(UserDict):

@@ -95,6 +95,22 @@ def birthdays(book: AddressBook):
 
     return "\n".join(output) if output else "No upcoming birthdays in the next week."
 
+def add_email(args, book: AddressBook):
+    name, email = args
+    record = book.find(name)
+    if record:
+        record.add_email(email)
+        return "Email added."
+    raise KeyError
+
+def show_email(args, book: AddressBook):
+    name, = args
+    record = book.find(name)
+    if record and record.email:
+        return str(record.email)
+    if record:
+        return "Email not set for this contact."
+    raise KeyError
 
 def main():
     """Main function to run the assistant bot."""
@@ -129,6 +145,10 @@ def main():
             print(show_birthday(args, book))
         elif command == "birthdays":
             print(birthdays(book))
+        elif command == "email":
+            print(add_email(args, book))
+        elif command == "show-email":
+            print(show_email(args, book))
         else:
             print("Invalid command.")
 
