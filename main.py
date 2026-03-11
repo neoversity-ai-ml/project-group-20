@@ -80,9 +80,13 @@ def show_birthday(args, book: AddressBook):
         return "Birthday not set for this contact."
     raise KeyError
 
-
+@input_error
 def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
+
+    if len(args) != 1:
+        raise ValueError("Please provide the number of days to check for upcoming birthdays.")
+    
     days, = args
     days = int(days)
 

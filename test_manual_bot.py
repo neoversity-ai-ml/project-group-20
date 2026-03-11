@@ -27,4 +27,4 @@ print(add_birthday(["Jack", (datetime.today() + timedelta(days=15)).strftime("%d
 print(add_birthday(["Bob", (datetime.today() + timedelta(days=1)).strftime("%d.%m.%Y")], book))
 
 print(show_all(book))
-print(birthdays([10], book))
+print(birthdays("10", book))
