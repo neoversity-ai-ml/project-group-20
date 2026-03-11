@@ -95,6 +95,7 @@ def birthdays(book: AddressBook):
 
     return "\n".join(output) if output else "No upcoming birthdays in the next week."
 
+@input_error
 def add_email(args, book: AddressBook):
     name, email = args
     record = book.find(name)
@@ -103,6 +104,7 @@ def add_email(args, book: AddressBook):
         return "Email added."
     raise KeyError
 
+@input_error
 def show_email(args, book: AddressBook):
     name, = args
     record = book.find(name)
