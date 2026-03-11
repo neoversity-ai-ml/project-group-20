@@ -74,6 +74,7 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
+        self.address = None
 
     def add_phone(self, phone_number):
         self.phones.append(Phone(phone_number))
@@ -101,11 +102,22 @@ class Record:
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
+    def add_address(self, address):
+        self.address = Address(address)
+
+
     def __str__(self):
         phones_str = '; '.join(p.value for p in self.phones)
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
-        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}"
+        address_str = f", address: {self.address}" if self.address else ""
+        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}"
 
+class Address(Field):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return self.value
 
 class AddressBook(UserDict):
     """Class for managing an address book of contacts."""
@@ -143,6 +155,7 @@ class AddressBook(UserDict):
                     upcoming.append({"name": record.name.value, "congratulation_date": congratulation_date})
 
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
+
 
 
 if __name__ == "__main__":
