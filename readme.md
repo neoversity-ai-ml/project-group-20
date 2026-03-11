@@ -76,10 +76,4 @@ any style violations will also show up in the CI workflow.
 ## Test coverage 📊
 
 We use `pytest-cov` to measure test coverage and upload the results to
-[Codecov](https://codecov.io/) every time the CI workflow runs. A badge showing
-the current coverage percentage is available at the top of this README:
-
-[![Coverage Status](https://codecov.io/gh/${{ github.repository }}/branch/main/graph/badge.svg)](https://codecov.io/gh/${{ github.repository }})
-
-To enable uploads you should add a `CODECOV_TOKEN` secret in your repository
-settings—public repos do not strictly require it, but it's good practice.
+[Codecov](https://codecov.io/) every time the CI workflow runs.
