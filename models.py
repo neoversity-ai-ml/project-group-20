@@ -121,7 +121,7 @@ class Record:
         self.email = Email(email)
 
     def __str__(self):
-        phones_str = '; '.join(p.value for p in self.phones)
+        phones_str = "; ".join(p.value for p in self.phones)
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
         address_str = f", address: {self.address}" if self.address else ""
         email_str = f", email: {self.email}" if self.email else ""
@@ -175,4 +175,5 @@ class AddressBook(UserDict):
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

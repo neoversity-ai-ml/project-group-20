@@ -1,0 +1,18 @@
+[project]
+name = "address-book-bot"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pre-commit",
+    {include-group = "lint"},
+]
+
+lint = [
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 90
