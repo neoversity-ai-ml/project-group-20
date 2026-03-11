@@ -8,11 +8,14 @@ dependencies = []
 dev = [
     "pre-commit",
     {include-group = "lint"},
+    {include-group = "test"},
 ]
 
+# linting tools
 lint = [
     "ruff",
 ]
 
-[tool.ruff]
-line-length = 90
+test = [
+  "pytest",
+]
