@@ -95,6 +95,60 @@ def birthdays(book: AddressBook):
 
     return "\n".join(output) if output else "No upcoming birthdays in the next week."
 
+@input_error
+def add_note(args, book: AddressBook):
+    text = " ".join(args)
+    book.add_note(text)
+    return "Note added."
+
+
+def show_notes(book: AddressBook):
+    return book.show_notes()
+
+
+@input_error
+def search_notes(args, book: AddressBook):
+    keyword = " ".join(args)
+    return book.search_notes(keyword)
+
+
+@input_error
+def edit_note(args, book: AddressBook):
+    if len(args) < 2:
+        raise IndexError
+    index = int(args[0])
+    new_text = " ".join(args[1:])
+    book.edit_note(index, new_text)
+    return "Note updated."
+
+
+@input_error
+def delete_note(args, book: AddressBook):
+    index = int(args[0])
+    book.delete_note(index)
+    return "Note deleted."
+
+
+def print_help():
+    return """
+Available commands:
+hello
+add <name> <phone>
+change <name> <old_phone> <new_phone>
+phone <name>
+all
+add-birthday <name> <DD.MM.YYYY>
+show-birthday <name>
+birthdays
+
+add-note <text>
+notes
+find-note <keyword>
+edit-note <note_number> <new_text>
+delete-note <note_number>
+
+close / exit
+""".strip()
 
 def main():
     """Main function to run the assistant bot."""
@@ -131,6 +185,7 @@ def main():
             print(birthdays(book))
         else:
             print("Invalid command.")
+
 
 
 if __name__ == "__main__":

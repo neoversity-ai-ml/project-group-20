@@ -66,6 +66,18 @@ class Birthday(Field):
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
 
+class Note(Field):
+    """Class for storing a text note."""
+
+    def __init__(self, value):
+        value = value.strip()
+        if not value:
+            raise ValueError("Note cannot be empty.")
+        super().__init__(value)
+
+    def __repr__(self):
+        return f"Note('{self.value}')"
+
 
 class Record:
     """Class for storing contact information."""
@@ -141,6 +153,42 @@ class AddressBook(UserDict):
                         day_of_week = 'Monday'
                     birthdays_by_day[day_of_week].append(record.name.value)
         return birthdays_by_day
+
+    def add_note(self, text):
+        note = Note(text)
+        self.notes.append(note)
+        return note
+
+    def show_notes(self):
+        if not self.notes:
+            return "No notes found."
+        return "\n".join(
+            f"{idx}. {note.value}" for idx, note in enumerate(self.notes, start=1)
+        )
+
+    def edit_note(self, index, new_text):
+        if not 1 <= index <= len(self.notes):
+            raise ValueError("Invalid note number.")
+        self.notes[index - 1] = Note(new_text)
+
+    def delete_note(self, index):
+        if not 1 <= index <= len(self.notes):
+            raise ValueError("Invalid note number.")
+        del self.notes[index - 1]
+
+    def search_notes(self, keyword):
+        keyword = keyword.strip().lower()
+        if not keyword:
+            raise ValueError("Search keyword cannot be empty.")
+
+        results = []
+        for idx, note in enumerate(self.notes, start=1):
+            if keyword in note.value.lower():
+                results.append(f"{idx}. {note.value}")
+
+        if not results:
+            return "No matching notes found."
+        return "\n".join(results)
 
 
 if __name__ == "__main__":
