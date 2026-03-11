@@ -131,7 +131,6 @@ class Record:
         return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}{email_str}"
 
 
-
 class Address(Field):
     def __init__(self, value):
         self.value = value
