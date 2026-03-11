@@ -20,3 +20,7 @@ test = [
   "pytest",
   "pytest-cov",
 ]
+
+[tool.pytest.ini_options]
+addopts = "--cov=. --cov-branch --cov-report=xml --doctest-modules --maxfail=1 -q"
+testpaths = ["."]
