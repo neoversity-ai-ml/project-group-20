@@ -84,24 +84,23 @@ def show_birthday(args, book: AddressBook):
 def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
 
-    if len(args) != 1:
+    if len(args) != 1 or not args[0].isdigit():
         raise ValueError("Please provide the number of days to check for upcoming birthdays.")
     
     days, = args
     days = int(days)
 
-    if days <= 0:
-        raise ValueError("Days must be a positive number.")
+    if days <= 0 or days > 365:
+        raise ValueError("Days must be a positive number and not exceed 365.")
     
     birthdays_by_day = book.get_upcoming_birthdays(days)
     if not birthdays_by_day:
         return "No upcoming birthdays during requested period."
 
     output = []
-    week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-    for day in week_days:
-        if birthdays_by_day[day]:
-            output.append(f"{day}: {', '.join(birthdays_by_day[day])}")
+    for entry in birthdays_by_day:
+        d = entry["congratulation_date"]
+        output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
     return "\n".join(output) if output else "No upcoming birthdays during requested period."
 
@@ -141,7 +140,6 @@ def main():
             print(birthdays(args, book))
         else:
             print("Invalid command.")
-
 
 if __name__ == "__main__":
     main()

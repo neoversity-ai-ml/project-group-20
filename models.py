@@ -1,6 +1,6 @@
 import re
-from collections import UserDict, defaultdict
-from datetime import date, datetime
+from collections import UserDict
+from datetime import date, datetime, timedelta
 
 
 class Field:
@@ -123,9 +123,9 @@ class AddressBook(UserDict):
             raise KeyError
 
     def get_upcoming_birthdays(self, days):
-        """Returns contacts with birthdays in the upcoming requested period, grouped by day."""
+        """Returns contacts with birthdays in the upcoming requested period, sorted by date."""
 
-        birthdays_by_day = defaultdict(list)
+        upcoming = []
         today = date.today()
 
         for record in self.data.values():
@@ -136,11 +136,13 @@ class AddressBook(UserDict):
 
                 delta_days = (birthday_this_year - today).days
                 if 0 <= delta_days < days:
-                    day_of_week = birthday_this_year.strftime('%A')
-                    if day_of_week in ['Saturday', 'Sunday']:
-                        day_of_week = 'Monday'
-                    birthdays_by_day[day_of_week].append(record.name.value)
-        return birthdays_by_day
+                    congratulation_date = birthday_this_year
+                    if congratulation_date.strftime('%A') in ['Saturday', 'Sunday']:
+                        days_until_monday = (7 - congratulation_date.weekday()) % 7
+                        congratulation_date = congratulation_date + timedelta(days=days_until_monday)
+                    upcoming.append({"name": record.name.value, "congratulation_date": congratulation_date})
+
+        return sorted(upcoming, key=lambda x: x["congratulation_date"])
 
 
 if __name__ == "__main__":
