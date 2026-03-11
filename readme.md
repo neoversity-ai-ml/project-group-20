@@ -52,13 +52,10 @@ request against `main`.
 The project uses [uv](https://github.com/astral-sh/uv) to manage dependencies,
 including development tools. To prepare your local environment:
 
-1. Install `uv` (if it isn’t already):
+1. Install `uv` using [getting started guide](https://docs.astral.sh/uv/getting-started/installation/).
+2. Sync dependencies:
    ```sh
-   pip install uv
-   ```
-2. Sync the development dependencies:
-   ```sh
-   uv sync --only-dev
+   uv sync
    ```
 3. Install the git hook:
    ```sh
