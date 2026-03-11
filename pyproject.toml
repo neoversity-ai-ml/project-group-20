@@ -22,5 +22,19 @@ test = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=. --cov-branch --cov-report=xml --doctest-modules --maxfail=1 -q"
+addopts = "--doctest-modules --maxfail=1 -q"
 testpaths = ["."]
+
+[tool.coverage.run]
+source = ["."]
+branch = true
+omit = [
+    "*/__init__.py",
+    "tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:  # pragma: no cover",
+]

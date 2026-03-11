@@ -4,5 +4,6 @@
 
 addressbook.pkl
 
+htmlcov/
 .coverage
 coverage.*
