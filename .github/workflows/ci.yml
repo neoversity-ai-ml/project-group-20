@@ -36,6 +36,11 @@ jobs:
       - name: Run pre-commit
         run: uv run pre-commit run --all-files
 
-      - name: Run doctests
+      - name: Run tests with coverage
         run: |
-          uv run python -m pytest --doctest-modules --maxfail=1 -q
+          uv run python -m pytest --cov --cov-branch --cov-report=xml --cov=. --doctest-modules --maxfail=1 -q
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -18,4 +18,5 @@ lint = [
 
 test = [
   "pytest",
+  "pytest-cov",
 ]
