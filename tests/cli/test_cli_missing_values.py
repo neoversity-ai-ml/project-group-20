@@ -42,19 +42,23 @@ def test_contacts_management(capsys, monkeypatch):
         "change-phone Bob 1234567891 1234567891",
         "delete-address Bob",
         "delete-email Bob",
+        "show-birthday",
+        "search",
+        "delete-address",
+        "delete-email",
         "exit",
     )
 
     expected = textwrap.dedent(f"""\
         Welcome to the assistant bot!
         Contact not found.
-        not enough values to unpack (expected 1, got 0)
+        Please provide only name to show the phone.
         Contact not found.
         Contact not found.
         Contact not found.
         Contact not found.
-        not enough values to unpack (expected 1, got 0)
-        not enough values to unpack (expected 2, got 1)
+        Please provide only contact name.
+        Please provide name and email.
         Please provide name and address: name address.
         Please provide name and address: name address.
         Contact not found.
@@ -78,6 +82,10 @@ def test_contacts_management(capsys, monkeypatch):
         Phone number to edit not found.
         Address not found.
         Email not found.
+        Please provide only name to show the birthday.
+        Please provide some query to search for.
+        Please provide only contact name.
+        Please provide only contact name.
         Good bye!
     """)
 
