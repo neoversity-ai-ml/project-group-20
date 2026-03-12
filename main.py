@@ -1,8 +1,7 @@
 from data_loading import load_data, save_data
 from models import AddressBook, Record
 
-from command_resolver import CommandResolver
-from fuzzy_command_resolver import FuzzyCommandResolver
+from command_resolvers import CommandResolver, FuzzyCommandResolver
 
 
 def input_error(func):
@@ -55,7 +54,10 @@ def show_phone(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
     if record:
-        return "; ".join(p.value for p in record.phones)
+        if record.phones:
+            return "; ".join(p.value for p in record.phones)
+        else:
+            return "No phone numbers found for this contact."
     raise KeyError
 
 
@@ -119,10 +121,10 @@ def birthdays(args, book: AddressBook):
 def add_address(args, book: AddressBook):
     if len(args) < 2:
         raise ValueError("Please provide name and address: name address.")
-   
+
     name, *address_parts = args
     address = " ".join(address_parts)
-    
+
     record = book.find(name)
     if record:
         record.add_address(address)
@@ -150,6 +152,7 @@ def show_email(args, book: AddressBook):
         return email
     raise KeyError
 
+
 @input_error
 def delete_phone(args, book: AddressBook):
     name, phone = args
@@ -160,34 +163,38 @@ def delete_phone(args, book: AddressBook):
         return f"Phone {phone} removed."
     raise KeyError
 
+
 @input_error
 def delete_email(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
 
     if record:
         record.remove_email()
-        return f"Email removed."
+        return "Email removed."
     raise KeyError
+
 
 @input_error
 def delete_address(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
 
     if record:
         record.remove_address()
-        return f"Address removed."
+        return "Address removed."
     raise KeyError
+
 
 @input_error
 def search_contacts(args, book: AddressBook):
-    query, = args
+    (query,) = args
     results = book.search(query)
 
     if not results:
-        return f"No contacts found."
+        return "No contacts found."
     return "\n".join(str(record) for record in results)
+
 
 command_resolver = CommandResolver(
     [
@@ -265,10 +272,10 @@ def main():
         elif command == "show-email":
             print(show_email(args, book))
 
-        #edit email through rewriting
+        # edit email through rewriting
         elif command == "change-email":
             print(add_email(args, book))
-        #edit address through rewriting
+        # edit address through rewriting
         elif command == "change-address":
             print(add_address(args, book))
         elif command == "delete-phone":
@@ -295,5 +302,5 @@ def main():
         save_data(book)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

@@ -119,7 +119,7 @@ class Record:
 
     def add_address(self, address):
         self.address = Address(address)
-    
+
     def remove_address(self):
         if self.address:
             self.address = None
@@ -136,7 +136,7 @@ class Record:
             raise ValueError("Email not found.")
 
     def __str__(self):
-        phones_str = "; ".join(p.value for p in self.phones)
+        phones_str = "; ".join(p.value for p in self.phones) if self.phones else "-"
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
         address_str = f", address: {self.address}" if self.address else ""
         email_str = f", email: {self.email}" if self.email else ""
@@ -194,7 +194,7 @@ class AddressBook(UserDict):
                     )
 
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
-    
+
     def search(self, query):
         query = query.lower()
         results = []
@@ -216,11 +216,5 @@ class AddressBook(UserDict):
             if record.address and query in record.address.value.lower():
                 results.append(record)
                 continue
-        
+
         return results
-
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
