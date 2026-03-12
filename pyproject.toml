@@ -23,6 +23,7 @@ test = [
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --maxfail=1 -q"
 testpaths = ["."]
+pythonpath = "."
 
 [tool.coverage.run]
 source = ["."]
