@@ -1,9 +1,13 @@
+from data_loading import load_data, save_data
 from models import AddressBook, Record
-from data_loading import save_data, load_data
+
+from command_resolver import CommandResolver
+from fuzzy_command_resolver import FuzzyCommandResolver
 
 
 def input_error(func):
     """Decorator to handle common input errors."""
+
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -13,6 +17,7 @@ def input_error(func):
             return "Contact not found."
         except IndexError:
             return "Invalid command format. Please provide all necessary arguments."
+
     return inner
 
 
@@ -47,10 +52,10 @@ def change_contact(args, book: AddressBook):
 
 @input_error
 def show_phone(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
     if record:
-        return '; '.join(p.value for p in record.phones)
+        return "; ".join(p.value for p in record.phones)
     raise KeyError
 
 
@@ -72,7 +77,7 @@ def add_birthday(args, book: AddressBook):
 
 @input_error
 def show_birthday(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
     if record and record.birthday:
         return str(record.birthday)
@@ -80,19 +85,22 @@ def show_birthday(args, book: AddressBook):
         return "Birthday not set for this contact."
     raise KeyError
 
+
 @input_error
 def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
 
     if len(args) != 1 or not args[0].isdigit():
-        raise ValueError("Please provide the number of days to check for upcoming birthdays.")
-    
-    days, = args
+        raise ValueError(
+            "Please provide the number of days to check for upcoming birthdays."
+        )
+
+    (days,) = args
     days = int(days)
 
     if days <= 0 or days > 365:
         raise ValueError("Days must be a positive number and not exceed 365.")
-    
+
     birthdays_by_day = book.get_upcoming_birthdays(days)
     if not birthdays_by_day:
         return "No upcoming birthdays during requested period."
@@ -102,21 +110,26 @@ def birthdays(args, book: AddressBook):
         d = entry["congratulation_date"]
         output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
-    return "\n".join(output) if output else "No upcoming birthdays during requested period."
+    return (
+        "\n".join(output) if output else "No upcoming birthdays during requested period."
+    )
+
 
 @input_error
 def add_address(args, book: AddressBook):
     if len(args) < 2:
         raise ValueError("Please provide name and address: name address.")
-    
-    name = args[0]
-    address = " ".join(args[1:])
+   
+    name, *address_parts = args
+    address = " ".join(address_parts)
     
     record = book.find(name)
     if record:
         record.add_address(address)
         return "Address added."
     raise KeyError
+
+
 @input_error
 def add_email(args, book: AddressBook):
     name, email = args
@@ -126,9 +139,10 @@ def add_email(args, book: AddressBook):
         return "Email added."
     raise KeyError
 
+
 @input_error
 def show_email(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
 
     if record:
@@ -174,6 +188,41 @@ def search_contacts(args, book: AddressBook):
     if not results:
         return f"No contacts found."
     return "\n".join(str(record) for record in results)
+
+command_resolver = CommandResolver(
+    [
+        (r"hi|hey|привіт", ("hello",)),
+        (r"quit|break", ("exit", "close")),
+        (r"insert|create", ("add Name 1234567890", "add-birthday Name 01.01.1990")),
+        (
+            r"edit|modify",
+            ("change Name 1234567890 1234567891", "add-birthday Name 01.01.1990"),
+        ),
+        (r"del|delete|remove", ("delete contact", "delete birthday")),
+        (r"show|display|list", ("all", "birthdays", "show-birthday Name", "phone Name")),
+        (
+            r"birth|day",
+            ("birthdays", "add-birthday Name 01.01.1990", "show-birthday Name"),
+        ),
+        (r"find|call|number", ("phone Name", "change Name 1234567890 1234567891")),
+    ]
+)
+
+
+fuzzy_resolver = FuzzyCommandResolver(
+    {
+        "hello": "hello",
+        "exit": "exit",
+        "close": "close",
+        "add": "add Name 1234567890",
+        "add-birthday": "add-birthday Name 01.01.1990",
+        "change": "change Name 1234567890 1234567891",
+        "show-birthday": "show-birthday Name",
+        "all": "all",
+        "birthdays": "birthdays",
+        "phone": "phone Name",
+    }
+)
 
 
 def main():
@@ -231,10 +280,20 @@ def main():
         elif command == "search":
             print(search_contacts(args, book))
         else:
-            print("Invalid command.")
+            fallbacks = (
+                command_resolver.resolve(user_input)
+                or fuzzy_resolver.resolve(command.lower(), args)
+                or fuzzy_resolver.resolve(user_input, [])
+            )
+            if fallbacks:
+                print("Command not found. Did you mean:")
+                for fallback in fallbacks:
+                    print(f"  {fallback}")
+            else:
+                print("Invalid command.")
+
+        save_data(book)
+
 
 if __name__ == "__main__":
     main()
-
-
-
