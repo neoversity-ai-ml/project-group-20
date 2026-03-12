@@ -26,7 +26,7 @@ def run_cli(
 ) -> str:
     commands = iter(inputs)
 
-    def fake_input(prompt=""):
+    def fake_input(prompt: str = "") -> str:
         try:
             return next(commands)
         except StopIteration:
@@ -40,3 +40,10 @@ def run_cli(
         pass
 
     return capsys.readouterr().out
+
+
+def assert_mock_called_n_times_with(mock, n, arg):
+    assert mock.call_count == n
+    for call in mock.call_args_list:
+        args, kwargs = call
+        assert args == arg

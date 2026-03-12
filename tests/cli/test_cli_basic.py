@@ -1,6 +1,6 @@
 import textwrap
 
-from tests.cli.helpers import run_cli, mock_data_io
+from tests.cli.helpers import run_cli, mock_data_io, assert_mock_called_n_times_with
 
 from models import AddressBook
 
@@ -25,4 +25,4 @@ def test_hello(capsys, monkeypatch):
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)
-        mock_save.assert_called_once_with(book)
+        assert_mock_called_n_times_with(mock_save, len(commands), (book,))
