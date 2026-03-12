@@ -1,2 +1,9 @@
+/.venv/
+/.ruff_cache/
 /**/__pycache__/
+
 addressbook.pkl
+
+htmlcov/
+.coverage
+coverage.*

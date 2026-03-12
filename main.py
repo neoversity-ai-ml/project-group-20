@@ -1,9 +1,10 @@
+from data_loading import load_data, save_data
 from models import AddressBook, Record
-from data_loading import save_data, load_data
 
 
 def input_error(func):
     """Decorator to handle common input errors."""
+
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -13,6 +14,7 @@ def input_error(func):
             return "Contact not found."
         except IndexError:
             return "Invalid command format. Please provide all necessary arguments."
+
     return inner
 
 
@@ -47,10 +49,10 @@ def change_contact(args, book: AddressBook):
 
 @input_error
 def show_phone(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
     if record:
-        return '; '.join(p.value for p in record.phones)
+        return "; ".join(p.value for p in record.phones)
     raise KeyError
 
 
@@ -72,7 +74,7 @@ def add_birthday(args, book: AddressBook):
 
 @input_error
 def show_birthday(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
     if record and record.birthday:
         return str(record.birthday)
@@ -80,19 +82,22 @@ def show_birthday(args, book: AddressBook):
         return "Birthday not set for this contact."
     raise KeyError
 
+
 @input_error
 def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
 
     if len(args) != 1 or not args[0].isdigit():
-        raise ValueError("Please provide the number of days to check for upcoming birthdays.")
-    
-    days, = args
+        raise ValueError(
+            "Please provide the number of days to check for upcoming birthdays."
+        )
+
+    (days,) = args
     days = int(days)
 
     if days <= 0 or days > 365:
         raise ValueError("Days must be a positive number and not exceed 365.")
-    
+
     birthdays_by_day = book.get_upcoming_birthdays(days)
     if not birthdays_by_day:
         return "No upcoming birthdays during requested period."
@@ -102,19 +107,24 @@ def birthdays(args, book: AddressBook):
         d = entry["congratulation_date"]
         output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
-    return "\n".join(output) if output else "No upcoming birthdays during requested period."
+    return (
+        "\n".join(output) if output else "No upcoming birthdays during requested period."
+    )
+
 
 @input_error
 def add_address(args, book: AddressBook):
     if len(args) != 2:
         raise ValueError("Please provide name and address: name address.")
-    
+
     name, address = args
     record = book.find(name)
     if record:
         record.add_address(address)
         return "Address added."
     raise KeyError
+
+
 @input_error
 def add_email(args, book: AddressBook):
     name, email = args
@@ -124,15 +134,17 @@ def add_email(args, book: AddressBook):
         return "Email added."
     raise KeyError
 
+
 @input_error
 def show_email(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
 
     if record:
         email = record.email or "Email not set for this contact."
         return email
     raise KeyError
+
 
 def main():
     """Main function to run the assistant bot."""
@@ -176,8 +188,6 @@ def main():
         else:
             print("Invalid command.")
 
+
 if __name__ == "__main__":
     main()
-
-
-
