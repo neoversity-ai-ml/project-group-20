@@ -136,7 +136,7 @@ class Record:
             raise ValueError("Email not found.")
 
     def __str__(self):
-        phones_str = "; ".join(p.value for p in self.phones)
+        phones_str = "; ".join(p.value for p in self.phones) if self.phones else "-"
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
         address_str = f", address: {self.address}" if self.address else ""
         email_str = f", email: {self.email}" if self.email else ""

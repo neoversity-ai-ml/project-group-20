@@ -54,7 +54,10 @@ def show_phone(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
     if record:
-        return "; ".join(p.value for p in record.phones)
+        if record.phones:
+            return "; ".join(p.value for p in record.phones)
+        else:
+            return "No phone numbers found for this contact."
     raise KeyError
 
 
