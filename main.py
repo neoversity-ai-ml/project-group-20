@@ -115,6 +115,24 @@ def add_address(args, book: AddressBook):
         record.add_address(address)
         return "Address added."
     raise KeyError
+@input_error
+def add_email(args, book: AddressBook):
+    name, email = args
+    record = book.find(name)
+    if record:
+        record.add_email(email)
+        return "Email added."
+    raise KeyError
+
+@input_error
+def show_email(args, book: AddressBook):
+    name, = args
+    record = book.find(name)
+
+    if record:
+        email = record.email or "Email not set for this contact."
+        return email
+    raise KeyError
 
 def main():
     """Main function to run the assistant bot."""
@@ -151,6 +169,10 @@ def main():
             print(birthdays(args, book))
         elif command == "add-address":
             print(add_address(args, book))
+        elif command == "email":
+            print(add_email(args, book))
+        elif command == "show-email":
+            print(show_email(args, book))
         else:
             print("Invalid command.")
 

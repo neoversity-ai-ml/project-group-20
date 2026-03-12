@@ -36,13 +36,23 @@ class Phone(Field):
     """
 
     def __init__(self, value):
-        if not re.fullmatch(r'\d{10}', value):
-            raise ValueError("Phone number must be 10 digits.")
+        if not re.fullmatch(r'\+?\d{10}', value):
+            raise ValueError("Phone number must be 10 digits, optionally starting with +.")
+        digits = value.lstrip('+')
+        if digits[0] == '0':
+            raise ValueError("Phone number cannot start with 0.")
+        if len(set(digits)) == 1:
+            raise ValueError("Phone number cannot consist of all identical digits.")
         super().__init__(value)
 
     def __repr__(self):
         return f"Phone('{self.value}')"
 
+class Email(Field):
+    def __init__(self, value):
+        if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError("Invalid email address format.")
+        super().__init__(value)
 
 class Birthday(Field):
     """
@@ -75,6 +85,7 @@ class Record:
         self.phones = []
         self.birthday = None
         self.address = None
+        self.email = None
 
     def add_phone(self, phone_number):
         self.phones.append(Phone(phone_number))
@@ -106,11 +117,15 @@ class Record:
         self.address = Address(address)
 
 
+    def add_email(self, email):
+        self.email = Email(email)
+
     def __str__(self):
         phones_str = '; '.join(p.value for p in self.phones)
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
         address_str = f", address: {self.address}" if self.address else ""
-        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}"
+        email_str = f", email: {self.email}" if self.email else ""
+        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}{email_str}"
 
 class Address(Field):
     def __init__(self, value):
