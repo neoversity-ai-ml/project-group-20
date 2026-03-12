@@ -1,6 +1,9 @@
 from data_loading import load_data, save_data
 from models import AddressBook, Record
 
+from command_resolver import CommandResolver
+from fuzzy_command_resolver import FuzzyCommandResolver
+
 
 def input_error(func):
     """Decorator to handle common input errors."""
@@ -146,6 +149,42 @@ def show_email(args, book: AddressBook):
     raise KeyError
 
 
+command_resolver = CommandResolver(
+    [
+        (r"hi|hey|привіт", ("hello",)),
+        (r"quit|break", ("exit", "close")),
+        (r"insert|create", ("add Name 1234567890", "add-birthday Name 01.01.1990")),
+        (
+            r"edit|modify",
+            ("change Name 1234567890 1234567891", "add-birthday Name 01.01.1990"),
+        ),
+        (r"del|delete|remove", ("delete contact", "delete birthday")),
+        (r"show|display|list", ("all", "birthdays", "show-birthday Name", "phone Name")),
+        (
+            r"birth|day",
+            ("birthdays", "add-birthday Name 01.01.1990", "show-birthday Name"),
+        ),
+        (r"find|call|number", ("phone Name", "change Name 1234567890 1234567891")),
+    ]
+)
+
+
+fuzzy_resolver = FuzzyCommandResolver(
+    {
+        "hello": "hello",
+        "exit": "exit",
+        "close": "close",
+        "add": "add Name 1234567890",
+        "add-birthday": "add-birthday Name 01.01.1990",
+        "change": "change Name 1234567890 1234567891",
+        "show-birthday": "show-birthday Name",
+        "all": "all",
+        "birthdays": "birthdays",
+        "phone": "phone Name",
+    }
+)
+
+
 def main():
     """Main function to run the assistant bot."""
 
@@ -186,7 +225,17 @@ def main():
         elif command == "show-email":
             print(show_email(args, book))
         else:
-            print("Invalid command.")
+            fallbacks = (
+                command_resolver.resolve(user_input)
+                or fuzzy_resolver.resolve(command.lower(), args)
+                or fuzzy_resolver.resolve(user_input, [])
+            )
+            if fallbacks:
+                print("Command not found. Did you mean:")
+                for fallback in fallbacks:
+                    print(f"  {fallback}")
+            else:
+                print("Invalid command.")
 
 
 if __name__ == "__main__":
