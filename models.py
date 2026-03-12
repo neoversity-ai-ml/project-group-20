@@ -115,10 +115,21 @@ class Record:
 
     def add_address(self, address):
         self.address = Address(address)
-
+    
+    def remove_address(self):
+        if self.address:
+            self.address = None
+        else:
+            raise ValueError("Address not found.")
 
     def add_email(self, email):
         self.email = Email(email)
+
+    def remove_email(self):
+        if self.email:
+            self.email = None
+        else:
+            raise ValueError("Email not found.")
 
     def __str__(self):
         phones_str = '; '.join(p.value for p in self.phones)
@@ -170,6 +181,30 @@ class AddressBook(UserDict):
                     upcoming.append({"name": record.name.value, "congratulation_date": congratulation_date})
 
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
+    
+    def search(self, query):
+        query = query.lower()
+        results = []
+
+        for record in self.data.values():
+            if query in record.name.value.lower():
+                results.append(record)
+                continue
+
+            found_in_phones = any(query in phone.value for phone in record.phones)
+            if found_in_phones:
+                results.append(record)
+                continue
+
+            if record.email and query in record.email.value.lower():
+                results.append(record)
+                continue
+
+            if record.address and query in record.address.value.lower():
+                results.append(record)
+                continue
+        
+        return results
 
 
 
