@@ -119,7 +119,7 @@ class Record:
 
     def add_address(self, address):
         self.address = Address(address)
-    
+
     def remove_address(self):
         if self.address:
             self.address = None
@@ -194,7 +194,7 @@ class AddressBook(UserDict):
                     )
 
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
-    
+
     def search(self, query):
         query = query.lower()
         results = []
@@ -216,11 +216,5 @@ class AddressBook(UserDict):
             if record.address and query in record.address.value.lower():
                 results.append(record)
                 continue
-        
+
         return results
-
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
