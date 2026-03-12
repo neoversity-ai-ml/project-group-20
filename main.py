@@ -117,10 +117,12 @@ def birthdays(args, book: AddressBook):
 
 @input_error
 def add_address(args, book: AddressBook):
-    if len(args) != 2:
+    if len(args) < 2:
         raise ValueError("Please provide name and address: name address.")
-
-    name, address = args
+   
+    name, *address_parts = args
+    address = " ".join(address_parts)
+    
     record = book.find(name)
     if record:
         record.add_address(address)
@@ -148,6 +150,44 @@ def show_email(args, book: AddressBook):
         return email
     raise KeyError
 
+@input_error
+def delete_phone(args, book: AddressBook):
+    name, phone = args
+    record = book.find(name)
+
+    if record:
+        record.remove_phone(phone)
+        return f"Phone {phone} removed."
+    raise KeyError
+
+@input_error
+def delete_email(args, book: AddressBook):
+    name, = args
+    record = book.find(name)
+
+    if record:
+        record.remove_email()
+        return f"Email removed."
+    raise KeyError
+
+@input_error
+def delete_address(args, book: AddressBook):
+    name, = args
+    record = book.find(name)
+
+    if record:
+        record.remove_address()
+        return f"Address removed."
+    raise KeyError
+
+@input_error
+def search_contacts(args, book: AddressBook):
+    query, = args
+    results = book.search(query)
+
+    if not results:
+        return f"No contacts found."
+    return "\n".join(str(record) for record in results)
 
 command_resolver = CommandResolver(
     [
@@ -206,9 +246,9 @@ def main():
             print("How can I help you?")
         elif command == "add":
             print(add_contact(args, book))
-        elif command == "change":
+        elif command == "change-phone":
             print(change_contact(args, book))
-        elif command == "phone":
+        elif command == "show-phone":
             print(show_phone(args, book))
         elif command == "all":
             print(show_all(book))
@@ -220,10 +260,25 @@ def main():
             print(birthdays(args, book))
         elif command == "add-address":
             print(add_address(args, book))
-        elif command == "email":
+        elif command == "add-email":
             print(add_email(args, book))
         elif command == "show-email":
             print(show_email(args, book))
+
+        #edit email through rewriting
+        elif command == "change-email":
+            print(add_email(args, book))
+        #edit address through rewriting
+        elif command == "change-address":
+            print(add_address(args, book))
+        elif command == "delete-phone":
+            print(delete_phone(args, book))
+        elif command == "delete-email":
+            print(delete_email(args, book))
+        elif command == "delete-address":
+            print(delete_address(args, book))
+        elif command == "search":
+            print(search_contacts(args, book))
         else:
             fallbacks = (
                 command_resolver.resolve(user_input)
