@@ -108,10 +108,10 @@ def add_email(args, book: AddressBook):
 def show_email(args, book: AddressBook):
     name, = args
     record = book.find(name)
-    if record and record.email:
-        return str(record.email)
+
     if record:
-        return "Email not set for this contact."
+        email = record.email or "Email not set for this contact."
+        return email
     raise KeyError
 
 def main():
