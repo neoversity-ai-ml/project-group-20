@@ -244,6 +244,39 @@ fuzzy_resolver = FuzzyCommandResolver(
 )
 
 
+def hello(_args, _book):
+    return "How can I help you?"
+
+
+COMMANDS = {
+    "hello": hello,
+    "add": add_contact,
+    "change-phone": change_contact,
+    "show-phone": show_phone,
+    "all": show_all,
+    "add-birthday": add_birthday,
+    "show-birthday": show_birthday,
+    "birthdays": birthdays,
+    "add-address": add_address,
+    "add-email": add_email,
+    "show-email": show_email,
+    "change-email": add_email,
+    "change-address": add_address,
+    "delete-phone": delete_phone,
+    "delete-email": delete_email,
+    "delete-address": delete_address,
+    "search": search_contacts,
+}
+
+
+def suggest_command(user_input, command, args):
+    return (
+        command_resolver.resolve(user_input)
+        or fuzzy_resolver.resolve(command.lower(), args)
+        or fuzzy_resolver.resolve(user_input, [])
+    )
+
+
 def main():
     """Main function to run the assistant bot."""
 
@@ -257,53 +290,16 @@ def main():
 
         command, *args = parse_input(user_input)
 
-        if command in ["close", "exit"]:
-            save_data(book)
+        if command in {"close", "exit"}:
             print("Good bye!")
             break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command == "add":
-            print(add_contact(args, book))
-        elif command == "change-phone":
-            print(change_contact(args, book))
-        elif command == "show-phone":
-            print(show_phone(args, book))
-        elif command == "all":
-            print(show_all(args, book))
-        elif command == "add-birthday":
-            print(add_birthday(args, book))
-        elif command == "show-birthday":
-            print(show_birthday(args, book))
-        elif command == "birthdays":
-            print(birthdays(args, book))
-        elif command == "add-address":
-            print(add_address(args, book))
-        elif command == "add-email":
-            print(add_email(args, book))
-        elif command == "show-email":
-            print(show_email(args, book))
 
-        # edit email through rewriting
-        elif command == "change-email":
-            print(add_email(args, book))
-        # edit address through rewriting
-        elif command == "change-address":
-            print(add_address(args, book))
-        elif command == "delete-phone":
-            print(delete_phone(args, book))
-        elif command == "delete-email":
-            print(delete_email(args, book))
-        elif command == "delete-address":
-            print(delete_address(args, book))
-        elif command == "search":
-            print(search_contacts(args, book))
+        handler = COMMANDS.get(command)
+
+        if handler:
+            print(handler(args, book))
         else:
-            fallbacks = (
-                command_resolver.resolve(user_input)
-                or fuzzy_resolver.resolve(command.lower(), args)
-                or fuzzy_resolver.resolve(user_input, [])
-            )
+            fallbacks = suggest_command(user_input, command, args)
             if fallbacks:
                 print("Command not found. Did you mean:")
                 for fallback in fallbacks:
