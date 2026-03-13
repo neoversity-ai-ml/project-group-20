@@ -15,8 +15,8 @@ def test_error_handling(capsys, monkeypatch):
     bob_bday = date.today()
 
     commands_to_response = (
-        ("change-phone Jane 1234567890 1234567890", "Contact not found."),
-        ("show-phone", "Please provide only name to show the phone."),
+        ("change Jane 1234567890 1234567890", "Contact not found."),
+        ("phone", "Please provide only name to show the phone."),
         ("add-birthday John 01.01.1990", "Contact not found."),
         ("add-birthday John", "Please provide only contact name and birthday."),
         ("show-birthday Jane", "Contact not found."),
@@ -27,7 +27,7 @@ def test_error_handling(capsys, monkeypatch):
         ("change-address John", "Please provide name and address: name address."),
         ("change-address Jane", "Please provide name and address: name address."),
         ("delete-phone Jane 1234567890", "Contact not found."),
-        ("show-phone Jane", "Contact not found."),
+        ("phone Jane", "Contact not found."),
         ("delete-email Jane", "Contact not found."),
         ("show-email Jane", "Contact not found."),
         ("delete-address Jane", "Contact not found."),
@@ -51,10 +51,10 @@ def test_error_handling(capsys, monkeypatch):
         ("add Jane 0111111111", "Phone number cannot start with 0."),
         ("delete-phone Bob 1234567891", "Phone number not found."),
         (
-            "change-phone Bob 1234567891",
+            "change Bob 1234567891",
             "Please provide only contact name and existing/new phone numbers.",
         ),
-        ("change-phone Bob 1234567891 1234567891", "Phone number to edit not found."),
+        ("change Bob 1234567891 1234567891", "Phone number to edit not found."),
         ("delete-address Bob", "Address not found."),
         ("delete-email Bob", "Email not found."),
         ("show-birthday", "Please provide only name to show the birthday."),

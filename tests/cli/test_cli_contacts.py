@@ -16,8 +16,8 @@ def test_contacts_management(capsys, monkeypatch):
     commands_to_response = (
         ("add John 1234567890", "Contact added."),
         ("add Jane 3987654321", "Contact added."),
-        ("change-phone John 1234567890 2987654321", "Contact changed."),
-        ("show-phone John", "2987654321"),
+        ("change John 1234567890 2987654321", "Contact changed."),
+        ("phone John", "2987654321"),
         ("add-birthday John 01.01.1990", "Birthday added."),
         ("show-birthday John", "01.01.1990"),
         (
@@ -30,7 +30,7 @@ def test_contacts_management(capsys, monkeypatch):
         ("change-email John john.doe@example.com", "Email added."),
         ("change-address John 456 Elm St", "Address added."),
         ("delete-phone John 2987654321", "Phone 2987654321 removed."),
-        ("show-phone John", "No phone numbers found for this contact."),
+        ("phone John", "No phone numbers found for this contact."),
         (
             "all",
             dedent("""\

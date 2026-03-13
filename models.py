@@ -80,6 +80,7 @@ class Birthday(Field):
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
 
+
 class Note(Field):
     """Class for storing a text note."""
 
@@ -165,7 +166,7 @@ class Address(Field):
 
 class AddressBook(UserDict):
     """Class for managing an address book of contacts."""
-    
+
     def __init__(self):
         super().__init__()
         self.notes = []
@@ -209,11 +210,11 @@ class AddressBook(UserDict):
                         }
                     )
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
-    
+
     def add_note(self, text):
         note = Note(text)
         self.notes.append(note)
-        
+
     def show_notes(self):
         return self.notes
 
@@ -233,7 +234,6 @@ class AddressBook(UserDict):
             raise ValueError("Search keyword cannot be empty.")
 
         return [note for note in self.notes if keyword in note.value.lower()]
-
 
     def search(self, query):
         query = query.lower()

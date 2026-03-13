@@ -227,7 +227,8 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             "exittt",
             dedent("""\
             Command not found. Did you mean:
-              exit"""),
+              exit
+              edit-note 1 new text"""),
         ),
         (
             "cloose",
@@ -240,6 +241,7 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             dedent("""\
             Command not found. Did you mean:
               add John 1234567890
+              add-note John 1234567890
               add-birthday John 1234567890"""),
         ),
         (

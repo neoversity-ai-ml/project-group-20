@@ -252,20 +252,24 @@ fuzzy_resolver = FuzzyCommandResolver(
 def hello(_args, _book):
     return "How can I help you?"
 
+
 @input_error
 def add_note(args, book: AddressBook):
     text = " ".join(args)
     book.add_note(text)
     return "Note added."
 
+
 def show_notes(args, book: AddressBook):
     return book.show_notes()
+
 
 @input_error
 def delete_note(args, book: AddressBook):
     index = int(args[0]) - 1
     book.delete_note(index)
     return "Note deleted."
+
 
 @input_error
 def search_notes(args, book: AddressBook):
@@ -316,6 +320,7 @@ def suggest_command(user_input, command, args):
         or fuzzy_resolver.resolve(user_input, [])
     )
 
+
 def print_help():
     return """
 Available commands:
@@ -336,6 +341,7 @@ delete-note <note_number>
 
 close / exit
 """.strip()
+
 
 def main():
     """Main function to run the assistant bot."""
