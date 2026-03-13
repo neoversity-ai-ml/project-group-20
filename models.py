@@ -36,13 +36,11 @@ class Phone(Field):
     """
 
     def __init__(self, value):
-        if not re.fullmatch(r"\+?\d{10}", value):
+        if not re.fullmatch(r'^\+?[\d\s\-\(\)]{7,15}$', value):
             raise ValueError(
-                "Phone number must be 10 digits, optionally starting with +."
+                "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses."
             )
-        digits = value.lstrip("+")
-        if digits[0] == "0":
-            raise ValueError("Phone number cannot start with 0.")
+        digits = re.sub(r'[\s\-\(\)]', '', value).lstrip('+')
         if len(set(digits)) == 1:
             raise ValueError("Phone number cannot consist of all identical digits.")
         super().__init__(value)
