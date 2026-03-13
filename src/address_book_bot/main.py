@@ -1,7 +1,7 @@
-from address_book_bot.data_loading import load_data, save_data
-from address_book_bot.models import AddressBook, Record
-from address_book_bot.utils import input_error, validate_args, parse_input
-from address_book_bot.command_resolvers import CommandResolver, FuzzyCommandResolver
+from .data_loading import load_data, save_data
+from .models import AddressBook, Record
+from .utils import input_error, validate_args, parse_input
+from .command_resolvers import CommandResolver, FuzzyCommandResolver
 
 
 @input_error

@@ -41,6 +41,34 @@ def main():\n    book = load_data()\n\n    # Основний цикл прог�
 
 ---
 
+### Running the Bot
+
+There are two primary ways to run the address book bot.
+
+#### As a module
+
+You can run the bot directly as a Python module from the root of the project. This is useful for quick tests without a full installation.
+
+```sh
+uv run python -m src.address_book_bot.main
+```
+
+#### As an installed script
+
+For more convenient, system-wide access, you can install the project as a command-line tool. This uses the `[project.scripts]` entry in `pyproject.toml` to create an executable script.
+
+1.  **Install the package in editable mode:**
+    ```sh
+    uv pip install -e .
+    ```
+
+2.  **Run the bot from anywhere:**
+    ```sh
+    address-book-bot
+    ```
+
+---
+
 ## Code quality and CI
 
 This repository uses [ruff](https://github.com/ruff-rs/ruff) as a combined linter
