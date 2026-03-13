@@ -1,13 +1,13 @@
 from datetime import date
 
-from tests.cli.helpers import (
+from helpers import (
     run_cli,
     mock_data_io,
     assert_mock_called_n_times_with,
     formatted_output,
 )
 
-from models import AddressBook
+from address_book_bot.models import AddressBook
 
 
 def test_error_handling(capsys, monkeypatch):
@@ -48,7 +48,10 @@ def test_error_handling(capsys, monkeypatch):
         ("search Jane", "No contacts found."),
         ("add-email Bob bobexample.com", "Invalid email address format."),
         ("add Jane 1111111111", "Phone number cannot consist of all identical digits."),
-        ("add Jane 0111111111", "Phone number cannot start with 0."),
+        (
+            "add Jane 1234567890123456",
+            "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses.",
+        ),
         ("delete-phone Bob 1234567891", "Phone number not found."),
         (
             "change Bob 1234567891",

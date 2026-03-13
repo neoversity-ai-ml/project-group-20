@@ -6,15 +6,15 @@ from unittest.mock import patch, MagicMock
 from pytest import CaptureFixture
 from _pytest.monkeypatch import MonkeyPatch
 
-from models import AddressBook
-from main import main
+from address_book_bot.models import AddressBook
+from address_book_bot.main import main
 
 
 @contextmanager
 def mock_data_io(book: AddressBook) -> Generator[Tuple[MagicMock, MagicMock], None, None]:
     with (
-        patch("main.save_data") as mock_save,
-        patch("main.load_data", return_value=book) as mock_load,
+        patch("address_book_bot.main.save_data") as mock_save,
+        patch("address_book_bot.main.load_data", return_value=book) as mock_load,
     ):
         yield mock_save, mock_load  # mock_save: MagicMock, mock_load: MagicMock
 

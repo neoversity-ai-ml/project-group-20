@@ -22,8 +22,8 @@ test = [
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --maxfail=1"
-testpaths = ["."]
-pythonpath = "."
+testpaths = ["src", "tests"]
+pythonpath = ["src", "tests"]
 
 [tool.coverage.run]
 source = ["."]
