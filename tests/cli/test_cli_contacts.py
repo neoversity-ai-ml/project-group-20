@@ -66,4 +66,4 @@ def test_contacts_management(capsys, monkeypatch):
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)
-        assert_mock_called_n_times_with(mock_save, len(commands), (book,))
+        assert_mock_called_n_times_with(mock_save, len(commands) - 1, (book,))
