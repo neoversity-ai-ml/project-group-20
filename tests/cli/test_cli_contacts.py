@@ -1,6 +1,11 @@
-import textwrap
+from textwrap import dedent
 
-from tests.cli.helpers import run_cli, mock_data_io, assert_mock_called_n_times_with
+from tests.cli.helpers import (
+    run_cli,
+    mock_data_io,
+    assert_mock_called_n_times_with,
+    formatted_output,
+)
 
 from models import AddressBook
 
@@ -8,61 +13,50 @@ from models import AddressBook
 def test_contacts_management(capsys, monkeypatch):
     book = AddressBook()
 
-    commands = (
-        "add John 1234567890",
-        "add Jane 3987654321",
-        "change-phone John 1234567890 2987654321",
-        "show-phone John",
-        "add-birthday John 01.01.1990",
-        "show-birthday John",
-        "birthdays",
-        "add-address John 123 Main St",
-        "add-email John john@example.com",
-        "show-email John",
-        "change-email John john.doe@example.com",
-        "change-address John 456 Elm St",
-        "delete-phone John 2987654321",
-        "show-phone John",
-        "all",
-        "search Jane",
-        "search 3987654321",
-        "search Elm",
-        "search john.doe@example.com",
-        "delete-address John",
-        "delete-email John",
-        "show-email John",
-        "exit",
+    commands_to_response = (
+        ("add John 1234567890", "Contact added."),
+        ("add Jane 3987654321", "Contact added."),
+        ("change-phone John 1234567890 2987654321", "Contact changed."),
+        ("show-phone John", "2987654321"),
+        ("add-birthday John 01.01.1990", "Birthday added."),
+        ("show-birthday John", "01.01.1990"),
+        (
+            "birthdays",
+            "Please provide the number of days to check for upcoming birthdays.",
+        ),
+        ("add-address John 123 Main St", "Address added."),
+        ("add-email John john@example.com", "Email added."),
+        ("show-email John", "john@example.com"),
+        ("change-email John john.doe@example.com", "Email added."),
+        ("change-address John 456 Elm St", "Address added."),
+        ("delete-phone John 2987654321", "Phone 2987654321 removed."),
+        ("show-phone John", "No phone numbers found for this contact."),
+        (
+            "all",
+            dedent("""\
+                Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com
+                Contact name: Jane, phones: 3987654321"""),
+        ),
+        ("search Jane", "Contact name: Jane, phones: 3987654321"),
+        ("search 3987654321", "Contact name: Jane, phones: 3987654321"),
+        (
+            "search Elm",
+            "Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com",
+        ),
+        (
+            "search john.doe@example.com",
+            "Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com",
+        ),
+        ("delete-address John", "Address removed."),
+        ("delete-email John", "Email removed."),
+        ("show-email John", "Email not set for this contact."),
+        ("exit", "Good bye!"),
     )
 
-    expected = textwrap.dedent("""\
-        Welcome to the assistant bot!
-        Contact added.
-        Contact added.
-        Contact changed.
-        2987654321
-        Birthday added.
-        01.01.1990
-        Please provide the number of days to check for upcoming birthdays.
-        Address added.
-        Email added.
-        john@example.com
-        Email added.
-        Address added.
-        Phone 2987654321 removed.
-        No phone numbers found for this contact.
-        Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com
-        Contact name: Jane, phones: 3987654321
-        Contact name: Jane, phones: 3987654321
-        Contact name: Jane, phones: 3987654321
-        Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com
-        Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com
-        Address removed.
-        Email removed.
-        Email not set for this contact.
-        Good bye!
-    """)
-
     with mock_data_io(book) as (mock_save, mock_load):
+        commands = [command for command, _ in commands_to_response]
+        expected = formatted_output(commands_to_response)
+
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)

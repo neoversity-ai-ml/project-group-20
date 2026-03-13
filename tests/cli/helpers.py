@@ -47,3 +47,14 @@ def assert_mock_called_n_times_with(mock, n, arg):
     for call in mock.call_args_list:
         args, kwargs = call
         assert args == arg
+
+
+def formatted_output(
+    mapping: tuple[tuple[str, str | None], ...],
+    prefix: str = "Welcome to the assistant bot!",
+) -> str:
+    output = "\n".join(
+        [response for _command, response in mapping if response is not None]
+    )
+    output = f"{prefix}\n{output}\n" if prefix else f"{output}\n"
+    return output
