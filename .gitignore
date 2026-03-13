@@ -8,3 +8,5 @@ addressbook.pkl
 htmlcov/
 .coverage
 coverage.*
+
+demo/*.gif
