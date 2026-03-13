@@ -1,7 +1,7 @@
-from .data_loading import load_data, save_data
-from .models import AddressBook
-from .utils import parse_input
-from .commands.commands import COMMANDS, suggest_command
+from address_book_bot.data_loading import load_data, save_data
+from address_book_bot.models import AddressBook
+from address_book_bot.utils import parse_input
+from address_book_bot.commands.commands import COMMANDS, suggest_command
 
 
 def main():
