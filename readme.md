@@ -70,6 +70,18 @@ After this, the `pre-commit` hooks will automatically run on every commit and
 any style violations will also show up in the CI workflow.
 
 
+### Running tests
+
+To run the test suite, use the following command:
+```sh
+uv run pytest
+```
+
+To run tests and see the coverage report in the terminal:
+```sh
+uv run pytest --cov
+```
+
 ## Test coverage 📊
 
 We use `pytest-cov` to measure test coverage and upload the results to
