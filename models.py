@@ -1,6 +1,6 @@
 import re
-from collections import UserDict, defaultdict
-from datetime import date, datetime
+from collections import UserDict
+from datetime import date, datetime, timedelta
 
 
 class Field:
@@ -28,20 +28,34 @@ class Phone(Field):
     >>> Phone("invalid-phone")
     Traceback (most recent call last):
         ...
-    ValueError: Phone number must be 10 digits.
+    ValueError: Phone number must be 10 digits, optionally starting with +.
     >>> Phone("12345")
     Traceback (most recent call last):
         ...
-    ValueError: Phone number must be 10 digits.
+    ValueError: Phone number must be 10 digits, optionally starting with +.
     """
 
     def __init__(self, value):
-        if not re.fullmatch(r'\d{10}', value):
-            raise ValueError("Phone number must be 10 digits.")
+        if not re.fullmatch(r"\+?\d{10}", value):
+            raise ValueError(
+                "Phone number must be 10 digits, optionally starting with +."
+            )
+        digits = value.lstrip("+")
+        if digits[0] == "0":
+            raise ValueError("Phone number cannot start with 0.")
+        if len(set(digits)) == 1:
+            raise ValueError("Phone number cannot consist of all identical digits.")
         super().__init__(value)
 
     def __repr__(self):
         return f"Phone('{self.value}')"
+
+
+class Email(Field):
+    def __init__(self, value):
+        if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError("Invalid email address format.")
+        super().__init__(value)
 
 
 class Birthday(Field):
@@ -86,6 +100,8 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
+        self.address = None
+        self.email = None
 
     def add_phone(self, phone_number):
         self.phones.append(Phone(phone_number))
@@ -113,10 +129,38 @@ class Record:
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
+    def add_address(self, address):
+        self.address = Address(address)
+
+    def remove_address(self):
+        if self.address:
+            self.address = None
+        else:
+            raise ValueError("Address not found.")
+
+    def add_email(self, email):
+        self.email = Email(email)
+
+    def remove_email(self):
+        if self.email:
+            self.email = None
+        else:
+            raise ValueError("Email not found.")
+
     def __str__(self):
-        phones_str = '; '.join(p.value for p in self.phones)
+        phones_str = "; ".join(p.value for p in self.phones) if self.phones else "-"
         birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
-        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}"
+        address_str = f", address: {self.address}" if self.address else ""
+        email_str = f", email: {self.email}" if self.email else ""
+        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}{email_str}"
+
+
+class Address(Field):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return self.value
 
 
 class AddressBook(UserDict):
@@ -138,11 +182,11 @@ class AddressBook(UserDict):
         else:
             raise KeyError
 
-    def get_upcoming_birthdays(self):
-        """Returns contacts with birthdays in the upcoming week, grouped by day."""
+    def get_upcoming_birthdays(self, days, today=None):
+        """Returns contacts with birthdays in the upcoming requested period, sorted by date."""
 
-        birthdays_by_day = defaultdict(list)
-        today = date.today()
+        upcoming = []
+        today = today or date.today()
 
         for record in self.data.values():
             if record.birthday:
@@ -151,13 +195,21 @@ class AddressBook(UserDict):
                     birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
                 delta_days = (birthday_this_year - today).days
-                if 0 <= delta_days < 7:
-                    day_of_week = birthday_this_year.strftime('%A')
-                    if day_of_week in ['Saturday', 'Sunday']:
-                        day_of_week = 'Monday'
-                    birthdays_by_day[day_of_week].append(record.name.value)
-        return birthdays_by_day
-
+                if 0 <= delta_days < days:
+                    congratulation_date = birthday_this_year
+                    if congratulation_date.strftime("%A") in ["Saturday", "Sunday"]:
+                        days_until_monday = (7 - congratulation_date.weekday()) % 7
+                        congratulation_date = congratulation_date + timedelta(
+                            days=days_until_monday
+                        )
+                    upcoming.append(
+                        {
+                            "name": record.name.value,
+                            "congratulation_date": congratulation_date,
+                        }
+                    )
+        return sorted(upcoming, key=lambda x: x["congratulation_date"])
+    
     def add_note(self, text):
         note = Note(text)
         self.notes.append(note)
@@ -180,17 +232,29 @@ class AddressBook(UserDict):
         if not keyword:
             raise ValueError("Search keyword cannot be empty.")
 
-        results = []
-        for note in self.notes:
-            if keyword in note.value.lower():
-                results.append(note)
-            if record.email and query in record.email.value.lower():
-                results.append(record)
-                continue
-        # return results
         return [note for note in self.notes if keyword in note.value.lower()]
 
 
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    def search(self, query):
+        query = query.lower()
+        results = []
+
+        for record in self.data.values():
+            if query in record.name.value.lower():
+                results.append(record)
+                continue
+
+            found_in_phones = any(query in phone.value for phone in record.phones)
+            if found_in_phones:
+                results.append(record)
+                continue
+
+            if record.email and query in record.email.value.lower():
+                results.append(record)
+                continue
+
+            if record.address and query in record.address.value.lower():
+                results.append(record)
+                continue
+
+        return results

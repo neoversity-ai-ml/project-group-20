@@ -1,0 +1,40 @@
+[project]
+name = "address-book-bot"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pre-commit",
+    {include-group = "lint"},
+    {include-group = "test"},
+]
+
+lint = [
+    "ruff",
+]
+
+test = [
+  "pytest",
+  "pytest-cov",
+]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --maxfail=1"
+testpaths = ["."]
+pythonpath = "."
+
+[tool.coverage.run]
+source = ["."]
+branch = true
+omit = [
+    "*/__init__.py",
+    "tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:  # pragma: no cover",
+]

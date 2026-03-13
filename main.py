@@ -1,28 +1,15 @@
+from data_loading import load_data, save_data
 from models import AddressBook, Record
-from data_loading import save_data, load_data
-
-
-def input_error(func):
-    """Decorator to handle common input errors."""
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError as e:
-            return str(e)
-        except KeyError:
-            return "Contact not found."
-        except IndexError:
-            return "Invalid command format. Please provide all necessary arguments."
-    return inner
-
-
-def parse_input(user_input):
-    """Parses user input into a command and arguments."""
-    cmd, *args = user_input.split()
-    return cmd.lower(), *args
+from utils import input_error, validate_args, parse_input
+from command_resolvers import CommandResolver, FuzzyCommandResolver
 
 
 @input_error
+@validate_args(
+    min_args=2,
+    max_args=2,
+    error_message="Please provide only contact name and phone number.",
+)
 def add_contact(args, book: AddressBook):
     name, phone = args
     record = book.find(name)
@@ -36,6 +23,11 @@ def add_contact(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=3,
+    max_args=3,
+    error_message="Please provide only contact name and existing/new phone numbers.",
+)
 def change_contact(args, book: AddressBook):
     name, old_phone, new_phone = args
     record = book.find(name)
@@ -46,21 +38,30 @@ def change_contact(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=1, max_args=1, error_message="Please provide only name to show the phone."
+)
 def show_phone(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
     if record:
-        return '; '.join(p.value for p in record.phones)
+        if record.phones:
+            return "; ".join(p.value for p in record.phones)
+        else:
+            return "No phone numbers found for this contact."
     raise KeyError
 
 
-def show_all(book: AddressBook):
+def show_all(_args, book: AddressBook):
     if not book.data:
         return "No contacts found."
     return "\n".join(str(record) for record in book.data.values())
 
 
 @input_error
+@validate_args(
+    min_args=2, max_args=2, error_message="Please provide only contact name and birthday."
+)
 def add_birthday(args, book: AddressBook):
     name, birthday = args
     record = book.find(name)
@@ -71,8 +72,11 @@ def add_birthday(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=1, max_args=1, error_message="Please provide only name to show the birthday."
+)
 def show_birthday(args, book: AddressBook):
-    name, = args
+    (name,) = args
     record = book.find(name)
     if record and record.birthday:
         return str(record.birthday)
@@ -81,22 +85,200 @@ def show_birthday(args, book: AddressBook):
     raise KeyError
 
 
-def birthdays(book: AddressBook):
+@input_error
+@validate_args(
+    min_args=1,
+    max_args=1,
+    error_message="Please provide the number of days to check for upcoming birthdays.",
+)
+def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
-    birthdays_by_day = book.get_upcoming_birthdays()
+
+    if not args[0].isdigit():
+        raise ValueError(
+            "Please provide the number of days to check for upcoming birthdays."
+        )
+
+    (days,) = args
+    days = int(days)
+
+    if days > 365:
+        raise ValueError("Days must be a positive number and not exceed 365.")
+
+    birthdays_by_day = book.get_upcoming_birthdays(days)
     if not birthdays_by_day:
-        return "No upcoming birthdays in the next week."
+        return "No upcoming birthdays during requested period."
 
     output = []
-    week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-    for day in week_days:
-        if birthdays_by_day[day]:
-            output.append(f"{day}: {', '.join(birthdays_by_day[day])}")
+    for entry in birthdays_by_day:
+        d = entry["congratulation_date"]
+        output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
-    return "\n".join(output) if output else "No upcoming birthdays in the next week."
+    return (
+        "\n".join(output) if output else "No upcoming birthdays during requested period."
+    )
 
 
-def show_notes(book: AddressBook):
+@input_error
+@validate_args(min_args=2, error_message="Please provide name and address: name address.")
+def add_address(args, book: AddressBook):
+    name, *address_parts = args
+    address = " ".join(address_parts)
+
+    record = book.find(name)
+    if record:
+        record.add_address(address)
+        return "Address added."
+    raise KeyError
+
+
+@input_error
+@validate_args(min_args=2, max_args=2, error_message="Please provide name and email.")
+def add_email(args, book: AddressBook):
+    name, email = args
+    record = book.find(name)
+    if record:
+        record.add_email(email)
+        return "Email added."
+    raise KeyError
+
+
+@input_error
+@validate_args(min_args=1, max_args=1, error_message="Please provide only contact name.")
+def show_email(args, book: AddressBook):
+    (name,) = args
+    record = book.find(name)
+
+    if record:
+        email = record.email or "Email not set for this contact."
+        return email
+    raise KeyError
+
+
+@input_error
+@validate_args(
+    min_args=2,
+    max_args=2,
+    error_message="Please provide only contact name and phone number.",
+)
+def delete_phone(args, book: AddressBook):
+    name, phone = args
+    record = book.find(name)
+
+    if record:
+        record.remove_phone(phone)
+        return f"Phone {phone} removed."
+    raise KeyError
+
+
+@input_error
+@validate_args(min_args=1, max_args=1, error_message="Please provide only contact name.")
+def delete_email(args, book: AddressBook):
+    (name,) = args
+    record = book.find(name)
+
+    if record:
+        record.remove_email()
+        return "Email removed."
+    raise KeyError
+
+
+@input_error
+@validate_args(min_args=1, max_args=1, error_message="Please provide only contact name.")
+def delete_address(args, book: AddressBook):
+    (name,) = args
+    record = book.find(name)
+
+    if record:
+        record.remove_address()
+        return "Address removed."
+    raise KeyError
+
+
+@input_error
+@validate_args(
+    min_args=1, max_args=1, error_message="Please provide some query to search for."
+)
+def search_contacts(args, book: AddressBook):
+    (query,) = args
+    results = book.search(query)
+
+    if not results:
+        return "No contacts found."
+    return "\n".join(str(record) for record in results)
+
+
+command_resolver = CommandResolver(
+    [
+        (r"hi|hey|привіт", ("hello",)),
+        (r"quit|break", ("exit", "close")),
+        (r"insert|create", ("add Name 1234567890", "add-birthday Name 01.01.1990")),
+        (
+            r"edit|modify",
+            ("change Name 1234567890 1234567891", "add-birthday Name 01.01.1990"),
+        ),
+        (r"del|delete|remove", ("delete contact", "delete birthday")),
+        (r"show|display|list", ("all", "birthdays", "show-birthday Name", "phone Name")),
+        (
+            r"birth|day",
+            ("birthdays", "add-birthday Name 01.01.1990", "show-birthday Name"),
+        ),
+        (r"find|call|number", ("phone Name", "change Name 1234567890 1234567891")),
+    ]
+)
+
+
+fuzzy_resolver = FuzzyCommandResolver(
+    {
+        "hello": "hello",
+        "exit": "exit",
+        "close": "close",
+        "add": "add Name 1234567890",
+        "add-birthday": "add-birthday Name 01.01.1990",
+        "change": "change Name 1234567890 1234567891",
+        "show-birthday": "show-birthday Name",
+        "all": "all",
+        "birthdays": "birthdays",
+        "phone": "phone Name",
+    }
+)
+
+
+def hello(_args, _book):
+    return "How can I help you?"
+
+
+COMMANDS = {
+    "hello": hello,
+    "add": add_contact,
+    "change-phone": change_contact,
+    "show-phone": show_phone,
+    "all": show_all,
+    "add-birthday": add_birthday,
+    "show-birthday": show_birthday,
+    "birthdays": birthdays,
+    "add-address": add_address,
+    "add-email": add_email,
+    "show-email": show_email,
+    "change-email": add_email,
+    "change-address": add_address,
+    "delete-phone": delete_phone,
+    "delete-email": delete_email,
+    "delete-address": delete_address,
+    "search": search_contacts,
+    "show-notes":show_notes,
+}
+
+
+def suggest_command(user_input, command, args):
+    return (
+        command_resolver.resolve(user_input)
+        or fuzzy_resolver.resolve(command.lower(), args)
+        or fuzzy_resolver.resolve(user_input, [])
+    )
+
+
+def show_notes(args, book: AddressBook):
     return book.show_notes()
 
 
@@ -157,32 +339,25 @@ def main():
 
         command, *args = parse_input(user_input)
 
-        if command in ["close", "exit"]:
-            save_data(book)
+        if command in {"close", "exit"}:
             print("Good bye!")
             break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command == "add":
-            print(add_contact(args, book))
-        elif command == "change":
-            print(change_contact(args, book))
-        elif command == "phone":
-            print(show_phone(args, book))
-        elif command == "all":
-            print(show_all(book))
-        elif command == "add-birthday":
-            print(add_birthday(args, book))
-        elif command == "show-birthday":
-            print(show_birthday(args, book))
-        elif command == "birthdays":
-            print(birthdays(book))
-        elif command == "show-notes":
-            print(show_notes(book))
+
+        handler = COMMANDS.get(command)
+
+        if handler:
+            print(handler(args, book))
         else:
-            print("Invalid command.")
+            fallbacks = suggest_command(user_input, command, args)
+            if fallbacks:
+                print("Command not found. Did you mean:")
+                for fallback in fallbacks:
+                    print(f"  {fallback}")
+            else:
+                print("Invalid command.")
+
+        save_data(book)
 
 
-
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
