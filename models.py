@@ -79,6 +79,19 @@ class Birthday(Field):
         return self.value.strftime("%d.%m.%Y")
 
 
+class Note(Field):
+    """Class for storing a text note."""
+
+    def __init__(self, value):
+        value = value.strip()
+        if not value:
+            raise ValueError("Note cannot be empty.")
+        super().__init__(value)
+
+    def __repr__(self):
+        return f"Note('{self.value}')"
+
+
 class Record:
     """Class for storing contact information."""
 
@@ -152,6 +165,10 @@ class Address(Field):
 class AddressBook(UserDict):
     """Class for managing an address book of contacts."""
 
+    def __init__(self):
+        super().__init__()
+        self.notes = []
+
     def add_record(self, record):
         self.data[record.name.value] = record
 
@@ -190,8 +207,28 @@ class AddressBook(UserDict):
                             "congratulation_date": congratulation_date,
                         }
                     )
-
         return sorted(upcoming, key=lambda x: x["congratulation_date"])
+
+    def add_note(self, text):
+        note = Note(text)
+        self.notes.append(note)
+
+    def edit_note(self, index, new_text):
+        if not 1 <= index <= len(self.notes):
+            raise ValueError("Invalid note number.")
+        self.notes[index] = Note(new_text)
+
+    def delete_note(self, index):
+        if not 1 <= index <= len(self.notes):
+            raise ValueError("Invalid note number.")
+        del self.notes[index]
+
+    def search_notes(self, keyword):
+        keyword = keyword.strip().lower()
+        if not keyword:
+            raise ValueError("Search keyword cannot be empty.")
+
+        return [note for note in self.notes if keyword in note.value.lower()]
 
     def search(self, query):
         query = query.lower()

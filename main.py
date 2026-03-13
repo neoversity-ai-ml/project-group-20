@@ -240,6 +240,11 @@ fuzzy_resolver = FuzzyCommandResolver(
         "all": "all",
         "birthdays": "birthdays",
         "phone": "phone Name",
+        "add-note": "add-note some text",
+        "notes": "notes",
+        "find-note": "find-note keyword",
+        "edit-note": "edit-note 1 new text",
+        "delete-note": "delete-note 1",
     }
 )
 
@@ -248,11 +253,55 @@ def hello(_args, _book):
     return "How can I help you?"
 
 
+@input_error
+def add_note(args, book: AddressBook):
+    text = " ".join(args)
+    book.add_note(text)
+    return "Note added."
+
+
+def show_notes(_args, book: AddressBook):
+    if not book.notes:
+        return "No notes found."
+    return "\n".join(str(note) for note in book.notes)
+
+
+@input_error
+def delete_note(args, book: AddressBook):
+    index = int(args[0]) - 1
+    book.delete_note(index)
+    return "Note deleted."
+
+
+@input_error
+def search_notes(args, book: AddressBook):
+    keyword = " ".join(args)
+    notes = book.search_notes(keyword)
+    if not notes:
+        return "No notes found."
+    return "\n".join(str(note) for note in notes)
+
+
+@input_error
+def edit_note(args, book: AddressBook):
+    if len(args) < 2:
+        raise IndexError
+    index = int(args[0]) - 1
+    new_text = " ".join(args[1:])
+    book.edit_note(index, new_text)
+    return "Note updated."
+
+
 COMMANDS = {
+    "add-note": add_note,
+    "show-notes": show_notes,
+    "find-note": search_notes,
+    "edit-note": edit_note,
+    "delete-note": delete_note,
     "hello": hello,
     "add": add_contact,
-    "change-phone": change_contact,
-    "show-phone": show_phone,
+    "change": change_contact,
+    "phone": show_phone,
     "all": show_all,
     "add-birthday": add_birthday,
     "show-birthday": show_birthday,
@@ -275,6 +324,28 @@ def suggest_command(user_input, command, args):
         or fuzzy_resolver.resolve(command.lower(), args)
         or fuzzy_resolver.resolve(user_input, [])
     )
+
+
+def print_help():
+    return """
+Available commands:
+hello
+add <name> <phone>
+change <name> <old_phone> <new_phone>
+phone <name>
+all
+add-birthday <name> <DD.MM.YYYY>
+show-birthday <name>
+birthdays
+
+add-note <text>
+notes
+find-note <keyword>
+edit-note <note_number> <new_text>
+delete-note <note_number>
+
+close / exit
+""".strip()
 
 
 def main():
