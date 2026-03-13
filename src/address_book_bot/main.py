@@ -1,7 +1,7 @@
 from address_book_bot.data_loading import load_data, save_data
 from address_book_bot.models import AddressBook
 from address_book_bot.utils import parse_input
-from address_book_bot.commands.commands import COMMANDS, suggest_command
+from address_book_bot.commands.commands import COMMANDS, DESCRIPTION_TEXT, suggest_command
 
 
 def main():
@@ -9,6 +9,9 @@ def main():
 
     book = load_data(default_factory=AddressBook)
     print("Welcome to the assistant bot!")
+
+    if len(book) == 0:
+        print(DESCRIPTION_TEXT)
 
     while True:
         user_input = input("Enter a command: ").strip()

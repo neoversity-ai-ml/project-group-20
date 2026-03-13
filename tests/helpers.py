@@ -8,6 +8,7 @@ from _pytest.monkeypatch import MonkeyPatch
 
 from address_book_bot.models import AddressBook
 from address_book_bot.main import main
+from address_book_bot.commands.commands import DESCRIPTION_TEXT
 
 
 @contextmanager
@@ -51,7 +52,7 @@ def assert_mock_called_n_times_with(mock, n, arg):
 
 def formatted_output(
     mapping: tuple[tuple[str, str | None], ...],
-    prefix: str = "Welcome to the assistant bot!",
+    prefix: str = f"Welcome to the assistant bot!\n{DESCRIPTION_TEXT}",
 ) -> str:
     output = "\n".join(
         [response for _command, response in mapping if response is not None]

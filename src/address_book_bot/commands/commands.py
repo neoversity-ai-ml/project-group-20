@@ -103,23 +103,35 @@ def suggest_command(user_input, command, args):
     )
 
 
-def print_help():
-    return """
-Available commands:
-hello
-add <name> <phone>
-change <name> <old_phone> <new_phone>
-phone <name>
-all
-add-birthday <name> <DD.MM.YYYY>
-show-birthday <name>
-birthdays
+DESCRIPTION_TEXT = """\
+        Available commands:
 
-add-note <text>
-notes
-find-note <keyword>
-edit-note <note_number> <new_text>
-delete-note <note_number>
+        hello                                   - Greet the bot
+        close / exit                            - Exit the program
 
-close / exit
-""".strip()
+        Contacts:
+        add <name> <phone>                      - Add a new contact
+        change <name> <old_phone> <new_phone>   - Change a contact's phone number
+        phone <name>                            - Show a contact's phone number(s)
+        all                                     - Show all contacts
+        search <query>                          - Search contacts by name or phone
+
+        add-birthday <name> <DD.MM.YYYY>        - Add a contact's birthday
+        show-birthday <name>                    - Show a contact's birthday
+        birthdays <days>                        - Show birthdays in the next <days> days
+
+        add-address <name> <address>            - Add a contact's address
+        change-address <name> <new_address>     - Change a contact's address
+        delete-address <name>                   - Delete a contact's address
+
+        add-email <name> <email>                - Add a contact's email
+        show-email <name>                       - Show a contact's email
+        change-email <name> <new_email>         - Change a contact's email
+        delete-email <name>                     - Delete a contact's email
+
+        Notes:
+        add-note <text>                         - Add a new note
+        show-notes                              - Show all notes
+        find-note <keyword>                     - Search for notes by keyword
+        edit-note <note_number> <new_text>      - Edit an existing note
+        delete-note <note_number>               - Delete a note by its number"""

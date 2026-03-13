@@ -1,9 +1,7 @@
 Output demo/demo.gif
 
 Hide
-Set FontSize 24
-Set Width 1400
-Set Height 600
+Set FontSize 18
 Set Padding 10
 Set TypingSpeed 50ms
 
@@ -13,7 +11,12 @@ Type "clear"
 Enter
 Type "uv run python -m run"
 Enter
+
+ScrollUp 30
 Show
+Sleep 5s
+ScrollDown@100ms 10
+Sleep 2s
 
 Type "hello"
 Enter

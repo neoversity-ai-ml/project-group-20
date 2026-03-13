@@ -42,7 +42,9 @@ def test_persisted_data(capsys, monkeypatch):
                 ("close", "Good bye!"),
             )
             commands = [command for command, _ in commands_to_response]
-            expected_output = formatted_output(commands_to_response)
+            expected_output = formatted_output(
+                commands_to_response, prefix="Welcome to the assistant bot!"
+            )
 
             assert run_cli(commands, capsys, monkeypatch) == expected_output
     finally:
