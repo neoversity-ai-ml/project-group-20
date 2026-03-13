@@ -214,12 +214,12 @@ class AddressBook(UserDict):
         self.notes.append(note)
 
     def edit_note(self, index, new_text):
-        if not 1 <= index <= len(self.notes):
+        if index >= len(self.notes):
             raise ValueError("Invalid note number.")
         self.notes[index] = Note(new_text)
 
     def delete_note(self, index):
-        if not 1 <= index <= len(self.notes):
+        if index >= len(self.notes):
             raise ValueError("Invalid note number.")
         del self.notes[index]
 
