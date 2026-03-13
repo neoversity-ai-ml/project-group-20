@@ -41,8 +41,6 @@ class Phone(Field):
                 "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses."
             )
         digits = re.sub(r'[\s\-\(\)]', '', value).lstrip('+')
-        if digits[0] == "0":
-            raise ValueError("Phone number cannot start with 0.")
         if len(set(digits)) == 1:
             raise ValueError("Phone number cannot consist of all identical digits.")
         super().__init__(value)
