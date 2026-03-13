@@ -6,7 +6,7 @@ from tests.cli.helpers import run_cli, mock_data_io, assert_mock_called_n_times_
 from models import AddressBook
 
 
-def test_contacts_management(capsys, monkeypatch):
+def test_error_handling(capsys, monkeypatch):
     book = AddressBook()
     bob_bday = date.today()
 
@@ -14,6 +14,7 @@ def test_contacts_management(capsys, monkeypatch):
         "change-phone Jane 1234567890 1234567890",
         "show-phone",
         "add-birthday John 01.01.1990",
+        "add-birthday John",
         "show-birthday Jane",
         "add-address John 123 Main St",
         "add-email John johnexample.com",
@@ -39,6 +40,7 @@ def test_contacts_management(capsys, monkeypatch):
         "add Jane 1111111111",
         "add Jane 0111111111",
         "delete-phone Bob 1234567891",
+        "change-phone Bob 1234567891",
         "change-phone Bob 1234567891 1234567891",
         "delete-address Bob",
         "delete-email Bob",
@@ -46,6 +48,9 @@ def test_contacts_management(capsys, monkeypatch):
         "search",
         "delete-address",
         "delete-email",
+        "delete-email Jane 123",
+        "add",
+        "delete-phone",
         "exit",
     )
 
@@ -54,6 +59,7 @@ def test_contacts_management(capsys, monkeypatch):
         Contact not found.
         Please provide only name to show the phone.
         Contact not found.
+        Please provide only contact name and birthday.
         Contact not found.
         Contact not found.
         Contact not found.
@@ -79,6 +85,7 @@ def test_contacts_management(capsys, monkeypatch):
         Phone number cannot consist of all identical digits.
         Phone number cannot start with 0.
         Phone number not found.
+        Please provide only contact name and existing/new phone numbers.
         Phone number to edit not found.
         Address not found.
         Email not found.
@@ -86,6 +93,9 @@ def test_contacts_management(capsys, monkeypatch):
         Please provide some query to search for.
         Please provide only contact name.
         Please provide only contact name.
+        Please provide only contact name.
+        Please provide only contact name and phone number.
+        Please provide only contact name and phone number.
         Good bye!
     """)
 
