@@ -166,11 +166,11 @@ class AddressBook(UserDict):
         else:
             raise KeyError
 
-    def get_upcoming_birthdays(self, days):
+    def get_upcoming_birthdays(self, days, today=None):
         """Returns contacts with birthdays in the upcoming requested period, sorted by date."""
 
         upcoming = []
-        today = date.today()
+        today = today or date.today()
 
         for record in self.data.values():
             if record.birthday:
