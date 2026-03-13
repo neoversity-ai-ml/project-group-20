@@ -4,19 +4,16 @@ Hide
 Set FontSize 24
 Set Width 1400
 Set Height 600
-Set Padding 20
-Set Margin 20
-Set BorderRadius 10
+Set Padding 10
 Set TypingSpeed 50ms
 
 Type "rm addressbook.pkl"
 Enter
 Type "clear"
 Enter
-Type "uv run python -m src.address_book_bot.main"
+Type "uv run python -m run"
 Enter
 Show
-
 
 Type "hello"
 Enter

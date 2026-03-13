@@ -3,7 +3,7 @@
 [![Codecov Coverage](https://codecov.io/gh/neoversity-ai-ml/project-group-20/graph/badge.svg?token=A26ZHG7CU6)](https://codecov.io/gh/neoversity-ai-ml/project-group-20)
 [![CodeFactor](https://www.codefactor.io/repository/github/neoversity-ai-ml/project-group-20/badge)](https://www.codefactor.io/repository/github/neoversity-ai-ml/project-group-20)
 
-![Made with VHS](https://vhs.charm.sh/vhs-479wqFz5RBcM4B6VFaESW.gif)
+![Made with VHS](https://vhs.charm.sh/vhs-2ySkyVCm1KtKaFhIknQueB.gif)
 
 **Технічний опис завдання**
 
@@ -52,7 +52,7 @@ There are two primary ways to run the address book bot.
 You can run the bot directly as a Python module from the root of the project. This is useful for quick tests without a full installation.
 
 ```sh
-uv run python -m src.address_book_bot.main
+uv run python -m run
 ```
 
 #### As an installed script
