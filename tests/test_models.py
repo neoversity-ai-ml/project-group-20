@@ -21,15 +21,8 @@ def test_delete_non_existing_contact_raises_key_error(address_book):
         address_book.delete("Jane Doe")
 
 
-def test_get_upcoming_birthdays(monkeypatch):
+def test_get_upcoming_birthdays():
     book = AddressBook()
-
-    class FakeDate(date):
-        @classmethod
-        def today(cls):
-            return cls(2024, 12, 23)
-
-    monkeypatch.setattr("models.date", FakeDate)
 
     record1 = Record("Bill")
     record1.add_birthday("26.12.1990")
@@ -53,7 +46,7 @@ def test_get_upcoming_birthdays(monkeypatch):
 
     book.add_record(Record("Blank"))
 
-    upcoming = book.get_upcoming_birthdays(10)
+    upcoming = book.get_upcoming_birthdays(10, today=date(2024, 12, 23))
 
     assert len(upcoming) == 4
 
@@ -73,19 +66,11 @@ def test_get_upcoming_birthdays(monkeypatch):
     assert {upcoming[1]["name"], upcoming[2]["name"]} == {"Jill", "Kim"}
 
 
-def test_get_upcoming_birthdays_no_results(monkeypatch):
+def test_get_upcoming_birthdays_no_results():
     book = AddressBook()
-
-    class FakeDate(date):
-        @classmethod
-        def today(cls):
-            return cls(2024, 5, 20)
-
-    monkeypatch.setattr("models.date", FakeDate)
-
     record = Record("Far Bday")
     record.add_birthday("10.10.1990")
     book.add_record(record)
 
-    upcoming = book.get_upcoming_birthdays(7)
+    upcoming = book.get_upcoming_birthdays(7, today=date(2024, 5, 20))
     assert upcoming == []
