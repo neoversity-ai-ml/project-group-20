@@ -240,6 +240,11 @@ fuzzy_resolver = FuzzyCommandResolver(
         "all": "all",
         "birthdays": "birthdays",
         "phone": "phone Name",
+        "add-note": "add-note some text",
+        "notes": "notes",
+        "find-note": "find-note keyword",
+        "edit-note": "edit-note 1 new text",
+        "delete-note": "delete-note 1",
     }
 )
 
@@ -247,40 +252,20 @@ fuzzy_resolver = FuzzyCommandResolver(
 def hello(_args, _book):
     return "How can I help you?"
 
-
-COMMANDS = {
-    "hello": hello,
-    "add": add_contact,
-    "change-phone": change_contact,
-    "show-phone": show_phone,
-    "all": show_all,
-    "add-birthday": add_birthday,
-    "show-birthday": show_birthday,
-    "birthdays": birthdays,
-    "add-address": add_address,
-    "add-email": add_email,
-    "show-email": show_email,
-    "change-email": add_email,
-    "change-address": add_address,
-    "delete-phone": delete_phone,
-    "delete-email": delete_email,
-    "delete-address": delete_address,
-    "search": search_contacts,
-    "show-notes":show_notes,
-}
-
-
-def suggest_command(user_input, command, args):
-    return (
-        command_resolver.resolve(user_input)
-        or fuzzy_resolver.resolve(command.lower(), args)
-        or fuzzy_resolver.resolve(user_input, [])
-    )
-
+@input_error
+def add_note(args, book: AddressBook):
+    text = " ".join(args)
+    book.add_note(text)
+    return "Note added."
 
 def show_notes(args, book: AddressBook):
     return book.show_notes()
 
+@input_error
+def delete_note(args, book: AddressBook):
+    index = int(args[0]) - 1
+    book.delete_note(index)
+    return "Note deleted."
 
 @input_error
 def search_notes(args, book: AddressBook):
@@ -298,12 +283,38 @@ def edit_note(args, book: AddressBook):
     return "Note updated."
 
 
-@input_error
-def delete_note(args, book: AddressBook):
-    index = int(args[0]) - 1
-    book.delete_note(index)
-    return "Note deleted."
+COMMANDS = {
+    "add-note": add_note,
+    "show-notes": show_notes,
+    "find-note": search_notes,
+    "edit-note": edit_note,
+    "delete-note": delete_note,
+    "hello": hello,
+    "add": add_contact,
+    "change": change_contact,
+    "phone": show_phone,
+    "all": show_all,
+    "add-birthday": add_birthday,
+    "show-birthday": show_birthday,
+    "birthdays": birthdays,
+    "add-address": add_address,
+    "add-email": add_email,
+    "show-email": show_email,
+    "change-email": add_email,
+    "change-address": add_address,
+    "delete-phone": delete_phone,
+    "delete-email": delete_email,
+    "delete-address": delete_address,
+    "search": search_contacts,
+}
 
+
+def suggest_command(user_input, command, args):
+    return (
+        command_resolver.resolve(user_input)
+        or fuzzy_resolver.resolve(command.lower(), args)
+        or fuzzy_resolver.resolve(user_input, [])
+    )
 
 def print_help():
     return """
