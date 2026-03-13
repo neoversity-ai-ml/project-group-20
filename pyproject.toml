@@ -22,16 +22,13 @@ test = [
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --maxfail=1 -q"
-testpaths = ["."]
-pythonpath = [".", "tests"]
+testpaths = ["src", "tests"]
+pythonpath = ["src", "tests"]
 
 [tool.coverage.run]
-source = ["."]
+source = ["src"]
 branch = true
-omit = [
-    "*/__init__.py",
-    "tests/*",
-]
+omit = ["*/__init__.py"]
 
 [tool.coverage.report]
 exclude_lines = [
