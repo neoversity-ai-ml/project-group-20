@@ -1,19 +1,21 @@
 Output demo/demo.gif
 
-Hide
-Set FontSize 24
-Set Width 1400
-Set Height 600
 Set Padding 10
 Set TypingSpeed 50ms
 
+Hide
 Type "rm addressbook.pkl"
 Enter
 Type "clear"
 Enter
 Type "uv run python -m run"
 Enter
+ScrollUp 30
 Show
+
+Sleep 5s
+ScrollDown@100ms 15
+Sleep 2s
 
 Type "hello"
 Enter
@@ -21,16 +23,16 @@ Sleep 1s
 
 Type "add Tetjana 4445556666"
 Enter
-Sleep 1s
+Sleep 0.5s
 Type "add-birthday Tetjana 05.05.1992"
 Enter
-Sleep 1s
+Sleep 0.5s
 Type "add-email Tetjana tetjana@example.com"
 Enter
-Sleep 1s
+Sleep 0.5s
 Type "add-address Tetjana 202 Bug Boulevard, QA Town"
 Enter
-Sleep 1s
+Sleep 0.5s
 
 Type "add Serhii 1112223333"
 Enter

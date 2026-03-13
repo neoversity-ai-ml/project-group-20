@@ -3,7 +3,7 @@
 [![Codecov Coverage](https://codecov.io/gh/neoversity-ai-ml/project-group-20/graph/badge.svg?token=A26ZHG7CU6)](https://codecov.io/gh/neoversity-ai-ml/project-group-20)
 [![CodeFactor](https://www.codefactor.io/repository/github/neoversity-ai-ml/project-group-20/badge)](https://www.codefactor.io/repository/github/neoversity-ai-ml/project-group-20)
 
-![Made with VHS](https://vhs.charm.sh/vhs-2ySkyVCm1KtKaFhIknQueB.gif)
+![Made with VHS](./demo/demo.gif)
 
 ---
 

@@ -9,6 +9,4 @@ htmlcov/
 .coverage
 coverage.*
 
-demo/*.gif
-
 *.egg-info/
