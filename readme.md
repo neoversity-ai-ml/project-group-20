@@ -1,5 +1,8 @@
 [![codecov](https://codecov.io/gh/neoversity-ai-ml/project-group-20/graph/badge.svg?token=A26ZHG7CU6)](https://codecov.io/gh/neoversity-ai-ml/project-group-20)
 
+
+![Made with VHS](https://vhs.charm.sh/vhs-479wqFz5RBcM4B6VFaESW.gif)
+
 **Технічний опис завдання**
 
 ```
