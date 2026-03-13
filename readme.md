@@ -77,6 +77,12 @@ To run the test suite, use the following command:
 uv run pytest
 ```
 
+Run tests for a specific file or test-case:
+```sh
+uv run pytest tests/test_models.py
+uv run pytest tests/test_models.py::test_get_upcoming_birthdays
+```
+
 To run tests and see the coverage report in the terminal:
 ```sh
 uv run pytest --cov

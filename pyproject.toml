@@ -21,7 +21,7 @@ test = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--doctest-modules --maxfail=1 -q"
+addopts = "--doctest-modules --maxfail=1"
 testpaths = ["."]
 pythonpath = "."
 
