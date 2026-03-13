@@ -1,6 +1,11 @@
-import textwrap
+from textwrap import dedent
 
-from tests.cli.helpers import run_cli, mock_data_io, assert_mock_called_n_times_with
+from tests.cli.helpers import (
+    run_cli,
+    mock_data_io,
+    assert_mock_called_n_times_with,
+    formatted_output,
+)
 
 from models import AddressBook
 
@@ -8,118 +13,192 @@ from models import AddressBook
 def test_regexp_resolved_commands(capsys, monkeypatch):
     book = AddressBook()
 
-    commands = (
-        "hi",
-        "Hey",
-        "привіт",
-        "heyy",
-        "quit",
-        "break",
-        "quitt",
-        "insert",
-        "create",
-        "Insert ",
-        "edit",
-        "modify",
-        "eDit  ",
-        "del",
-        "delete",
-        "remove",
-        " del  ",
-        "show",
-        "display",
-        "list",
-        "birth",
-        "day",
-        "find",
-        "call",
-        "number",
+    commands_to_response = (
+        (
+            "hi",
+            dedent("""\
+            Command not found. Did you mean:
+              hello"""),
+        ),
+        (
+            "Hey",
+            dedent("""\
+            Command not found. Did you mean:
+              hello"""),
+        ),
+        (
+            "привіт",
+            dedent("""\
+            Command not found. Did you mean:
+              hello"""),
+        ),
+        (
+            "heyy",
+            dedent("""\
+            Command not found. Did you mean:
+              hello"""),
+        ),
+        (
+            "quit",
+            dedent("""\
+            Command not found. Did you mean:
+              exit
+              close"""),
+        ),
+        (
+            "break",
+            dedent("""\
+            Command not found. Did you mean:
+              exit
+              close"""),
+        ),
+        (
+            "quitt",
+            dedent("""\
+            Command not found. Did you mean:
+              exit
+              close"""),
+        ),
+        (
+            "insert",
+            dedent("""\
+            Command not found. Did you mean:
+              add Name 1234567890
+              add-birthday Name 01.01.1990"""),
+        ),
+        (
+            "create",
+            dedent("""\
+            Command not found. Did you mean:
+              add Name 1234567890
+              add-birthday Name 01.01.1990"""),
+        ),
+        (
+            "Insert ",
+            dedent("""\
+            Command not found. Did you mean:
+              add Name 1234567890
+              add-birthday Name 01.01.1990"""),
+        ),
+        (
+            "edit",
+            dedent("""\
+            Command not found. Did you mean:
+              change Name 1234567890 1234567891
+              add-birthday Name 01.01.1990"""),
+        ),
+        (
+            "modify",
+            dedent("""\
+            Command not found. Did you mean:
+              change Name 1234567890 1234567891
+              add-birthday Name 01.01.1990"""),
+        ),
+        (
+            "eDit  ",
+            dedent("""\
+            Command not found. Did you mean:
+              change Name 1234567890 1234567891
+              add-birthday Name 01.01.1990"""),
+        ),
+        (
+            "del",
+            dedent("""\
+            Command not found. Did you mean:
+              delete contact
+              delete birthday"""),
+        ),
+        (
+            "delete",
+            dedent("""\
+            Command not found. Did you mean:
+              delete contact
+              delete birthday"""),
+        ),
+        (
+            "remove",
+            dedent("""\
+            Command not found. Did you mean:
+              delete contact
+              delete birthday"""),
+        ),
+        (
+            " del  ",
+            dedent("""\
+            Command not found. Did you mean:
+              delete contact
+              delete birthday"""),
+        ),
+        (
+            "show",
+            dedent("""\
+            Command not found. Did you mean:
+              all
+              birthdays
+              show-birthday Name
+              phone Name"""),
+        ),
+        (
+            "display",
+            dedent("""\
+            Command not found. Did you mean:
+              all
+              birthdays
+              show-birthday Name
+              phone Name"""),
+        ),
+        (
+            "list",
+            dedent("""\
+            Command not found. Did you mean:
+              all
+              birthdays
+              show-birthday Name
+              phone Name"""),
+        ),
+        (
+            "birth",
+            dedent("""\
+            Command not found. Did you mean:
+              birthdays
+              add-birthday Name 01.01.1990
+              show-birthday Name"""),
+        ),
+        (
+            "day",
+            dedent("""\
+            Command not found. Did you mean:
+              birthdays
+              add-birthday Name 01.01.1990
+              show-birthday Name"""),
+        ),
+        (
+            "find",
+            dedent("""\
+            Command not found. Did you mean:
+              phone Name
+              change Name 1234567890 1234567891"""),
+        ),
+        (
+            "call",
+            dedent("""\
+            Command not found. Did you mean:
+              phone Name
+              change Name 1234567890 1234567891"""),
+        ),
+        (
+            "number",
+            dedent("""\
+            Command not found. Did you mean:
+              phone Name
+              change Name 1234567890 1234567891"""),
+        ),
     )
 
-    expected = textwrap.dedent("""\
-        Welcome to the assistant bot!
-        Command not found. Did you mean:
-          hello
-        Command not found. Did you mean:
-          hello
-        Command not found. Did you mean:
-          hello
-        Command not found. Did you mean:
-          hello
-        Command not found. Did you mean:
-          exit
-          close
-        Command not found. Did you mean:
-          exit
-          close
-        Command not found. Did you mean:
-          exit
-          close
-        Command not found. Did you mean:
-          add Name 1234567890
-          add-birthday Name 01.01.1990
-        Command not found. Did you mean:
-          add Name 1234567890
-          add-birthday Name 01.01.1990
-        Command not found. Did you mean:
-          add Name 1234567890
-          add-birthday Name 01.01.1990
-        Command not found. Did you mean:
-          change Name 1234567890 1234567891
-          add-birthday Name 01.01.1990
-        Command not found. Did you mean:
-          change Name 1234567890 1234567891
-          add-birthday Name 01.01.1990
-        Command not found. Did you mean:
-          change Name 1234567890 1234567891
-          add-birthday Name 01.01.1990
-        Command not found. Did you mean:
-          delete contact
-          delete birthday
-        Command not found. Did you mean:
-          delete contact
-          delete birthday
-        Command not found. Did you mean:
-          delete contact
-          delete birthday
-        Command not found. Did you mean:
-          delete contact
-          delete birthday
-        Command not found. Did you mean:
-          all
-          birthdays
-          show-birthday Name
-          phone Name
-        Command not found. Did you mean:
-          all
-          birthdays
-          show-birthday Name
-          phone Name
-        Command not found. Did you mean:
-          all
-          birthdays
-          show-birthday Name
-          phone Name
-        Command not found. Did you mean:
-          birthdays
-          add-birthday Name 01.01.1990
-          show-birthday Name
-        Command not found. Did you mean:
-          birthdays
-          add-birthday Name 01.01.1990
-          show-birthday Name
-        Command not found. Did you mean:
-          phone Name
-          change Name 1234567890 1234567891
-        Command not found. Did you mean:
-          phone Name
-          change Name 1234567890 1234567891
-        Command not found. Did you mean:
-          phone Name
-          change Name 1234567890 1234567891
-    """)
-
     with mock_data_io(book) as (mock_save, mock_load):
+        commands = [command for command, _ in commands_to_response]
+        expected = formatted_output(commands_to_response)
+
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)
@@ -129,57 +208,89 @@ def test_regexp_resolved_commands(capsys, monkeypatch):
 def test_fuzzy_resolved_commands(capsys, monkeypatch):
     book = AddressBook()
 
-    commands = (
-        "helloo",
-        "HE LLO",
-        "exittt",
-        "cloose",
-        "addd John 1234567890",
-        "changee Name 123 456",
-        "showw-birthday Name",
-        "alll",
-        "birthdayss",
-        "phonne Name",
-        "helloo",
+    commands_to_response = (
+        (
+            "helloo",
+            dedent("""\
+            Command not found. Did you mean:
+              hello"""),
+        ),
+        (
+            "HE LLO",
+            dedent("""\
+            Command not found. Did you mean:
+              phone LLO
+              hello LLO
+              change LLO"""),
+        ),
+        (
+            "exittt",
+            dedent("""\
+            Command not found. Did you mean:
+              exit"""),
+        ),
+        (
+            "cloose",
+            dedent("""\
+            Command not found. Did you mean:
+              close"""),
+        ),
+        (
+            "addd John 1234567890",
+            dedent("""\
+            Command not found. Did you mean:
+              add John 1234567890
+              add-birthday John 1234567890"""),
+        ),
+        (
+            "changee Name 123 456",
+            dedent("""\
+            Command not found. Did you mean:
+              change Name 123 456
+              phone Name 123 456"""),
+        ),
+        (
+            "showw-birthday Name",
+            dedent("""\
+            Command not found. Did you mean:
+              all
+              birthdays
+              show-birthday Name
+              phone Name"""),
+        ),
+        (
+            "alll",
+            dedent("""\
+            Command not found. Did you mean:
+              all"""),
+        ),
+        (
+            "birthdayss",
+            dedent("""\
+            Command not found. Did you mean:
+              birthdays
+              add-birthday Name 01.01.1990
+              show-birthday Name"""),
+        ),
+        (
+            "phonne Name",
+            dedent("""\
+            Command not found. Did you mean:
+              phone Name
+              change Name"""),
+        ),
+        (
+            "helloo ",
+            dedent("""\
+            Command not found. Did you mean:
+              hello"""),
+        ),
     )
 
-    expected = textwrap.dedent("""\
-        Welcome to the assistant bot!
-        Command not found. Did you mean:
-          hello
-        Command not found. Did you mean:
-          phone LLO
-          hello LLO
-          change LLO
-        Command not found. Did you mean:
-          exit
-        Command not found. Did you mean:
-          close
-        Command not found. Did you mean:
-          add John 1234567890
-          add-birthday John 1234567890
-        Command not found. Did you mean:
-          change Name 123 456
-          phone Name 123 456
-        Command not found. Did you mean:
-          all
-          birthdays
-          show-birthday Name
-          phone Name
-        Command not found. Did you mean:
-          all
-        Command not found. Did you mean:
-          birthdays
-          add-birthday Name 01.01.1990
-          show-birthday Name
-        Command not found. Did you mean:
-          phone Name
-          change Name
-        Command not found. Did you mean:
-          hello
-    """)
-
     with mock_data_io(book) as (mock_save, mock_load):
+        commands = [command for command, _ in commands_to_response]
+        expected = formatted_output(commands_to_response)
+
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)

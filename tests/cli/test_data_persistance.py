@@ -1,9 +1,8 @@
 import os
 import tempfile
-import textwrap
 
 from unittest.mock import patch
-from tests.cli.helpers import run_cli
+from tests.cli.helpers import run_cli, formatted_output
 import pytest
 
 from data_loading import load_data, save_data
@@ -25,31 +24,22 @@ def test_persisted_data(capsys, monkeypatch):
             ),
             patch("main.save_data", side_effect=lambda book: save_data(book, filename)),
         ):
-            commands = (
-                "hello",
-                "add John 1234567890",
-                "exit",
+            commands_to_response = (
+                ("hello", "How can I help you?"),
+                ("add John 1234567890", "Contact added."),
+                ("exit", "Good bye!"),
             )
-
-            expected_output = textwrap.dedent("""\
-                Welcome to the assistant bot!
-                How can I help you?
-                Contact added.
-                Good bye!
-            """)
+            commands = [command for command, _ in commands_to_response]
+            expected_output = formatted_output(commands_to_response)
 
             assert run_cli(commands, capsys, monkeypatch) == expected_output
 
-            commands = (
-                "all",
-                "close",
+            commands_to_response = (
+                ("all", "Contact name: John, phones: 1234567890"),
+                ("close", "Good bye!"),
             )
-
-            expected_output = textwrap.dedent("""\
-                Welcome to the assistant bot!
-                Contact name: John, phones: 1234567890
-                Good bye!
-            """)
+            commands = [command for command, _ in commands_to_response]
+            expected_output = formatted_output(commands_to_response)
 
             assert run_cli(commands, capsys, monkeypatch) == expected_output
     finally:
