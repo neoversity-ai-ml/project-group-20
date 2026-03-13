@@ -3,12 +3,12 @@ import tempfile
 import textwrap
 
 from unittest.mock import patch
-from tests.cli.helpers import run_cli
+from helpers import run_cli
 import pytest
 
-from data_loading import load_data, save_data
-from models import AddressBook
-from main import main
+from address_book_bot.data_loading import load_data, save_data
+from address_book_bot.models import AddressBook
+from address_book_bot.main import main
 
 
 def test_persisted_data(capsys, monkeypatch):
@@ -18,12 +18,15 @@ def test_persisted_data(capsys, monkeypatch):
 
         with (
             patch(
-                "main.load_data",
+                "address_book_bot.main.load_data",
                 side_effect=lambda default_factory=AddressBook: load_data(
                     filename, default_factory
                 ),
             ),
-            patch("main.save_data", side_effect=lambda book: save_data(book, filename)),
+            patch(
+                "address_book_bot.main.save_data",
+                side_effect=lambda book: save_data(book, filename),
+            ),
         ):
             commands = (
                 "hello",
@@ -62,10 +65,13 @@ def test_no_data_file(capsys, monkeypatch):
 
     with (
         patch(
-            "main.load_data",
+            "address_book_bot.main.load_data",
             side_effect=lambda default_factory: load_data(filename, None),
         ),
-        patch("main.save_data", side_effect=lambda book: save_data(book, filename)),
+        patch(
+            "address_book_bot.main.save_data",
+            side_effect=lambda book: save_data(book, filename),
+        ),
     ):
         with pytest.raises(FileNotFoundError):
             main()

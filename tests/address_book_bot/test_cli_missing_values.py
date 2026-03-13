@@ -1,9 +1,9 @@
 from datetime import date
 import textwrap
 
-from tests.cli.helpers import run_cli, mock_data_io, assert_mock_called_n_times_with
+from helpers import run_cli, mock_data_io, assert_mock_called_n_times_with
 
-from models import AddressBook
+from address_book_bot.models import AddressBook
 
 
 def test_error_handling(capsys, monkeypatch):
