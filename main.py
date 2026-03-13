@@ -110,7 +110,7 @@ def search_notes(args, book: AddressBook):
 def edit_note(args, book: AddressBook):
     if len(args) < 2:
         raise IndexError
-    index = int(args[0])
+    index = int(args[0]) - 1
     new_text = " ".join(args[1:])
     book.edit_note(index, new_text)
     return "Note updated."
@@ -177,6 +177,8 @@ def main():
             print(show_birthday(args, book))
         elif command == "birthdays":
             print(birthdays(book))
+        elif command == "show-notes":
+            print(show_notes(book))
         else:
             print("Invalid command.")
 

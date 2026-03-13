@@ -121,6 +121,10 @@ class Record:
 
 class AddressBook(UserDict):
     """Class for managing an address book of contacts."""
+    
+    def __init__(self):
+        super().__init__()
+        self.notes = []
 
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -157,16 +161,19 @@ class AddressBook(UserDict):
     def add_note(self, text):
         note = Note(text)
         self.notes.append(note)
+        
+    def show_notes(book: AddressBook):
+        return book.notes
 
     def edit_note(self, index, new_text):
         if not 1 <= index <= len(self.notes):
             raise ValueError("Invalid note number.")
-        self.notes[index - 1] = Note(new_text)
+        self.notes[index] = Note(new_text)
 
     def delete_note(self, index):
         if not 1 <= index <= len(self.notes):
             raise ValueError("Invalid note number.")
-        del self.notes[index - 1]
+        del self.notes[index]
 
     def search_notes(self, keyword):
         keyword = keyword.strip().lower()
@@ -177,8 +184,11 @@ class AddressBook(UserDict):
         for note in self.notes:
             if keyword in note.value.lower():
                 results.append(note)
-
-        return results
+            if record.email and query in record.email.value.lower():
+                results.append(record)
+                continue
+        # return results
+        return [note for note in self.notes if keyword in note.value.lower()]
 
 
 if __name__ == "__main__":
