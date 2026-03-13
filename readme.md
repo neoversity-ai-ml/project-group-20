@@ -64,7 +64,7 @@ For more convenient, system-wide access, you can install the project as a comman
 
 2.  **Run the bot from anywhere:**
     ```sh
-    address-book-bot
+    uv run address-book-bot
     ```
 
 ---
