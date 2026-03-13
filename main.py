@@ -1,32 +1,15 @@
 from data_loading import load_data, save_data
 from models import AddressBook, Record
-
+from utils import input_error, validate_args, parse_input
 from command_resolvers import CommandResolver, FuzzyCommandResolver
 
 
-def input_error(func):
-    """Decorator to handle common input errors."""
-
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError as e:
-            return str(e)
-        except KeyError:
-            return "Contact not found."
-        except IndexError:
-            return "Invalid command format. Please provide all necessary arguments."
-
-    return inner
-
-
-def parse_input(user_input):
-    """Parses user input into a command and arguments."""
-    cmd, *args = user_input.split()
-    return cmd.lower(), *args
-
-
 @input_error
+@validate_args(
+    min_args=2,
+    max_args=2,
+    error_message="Please provide only contact name and phone number.",
+)
 def add_contact(args, book: AddressBook):
     name, phone = args
     record = book.find(name)
@@ -40,6 +23,11 @@ def add_contact(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=3,
+    max_args=3,
+    error_message="Please provide only contact name and existing/new phone numbers.",
+)
 def change_contact(args, book: AddressBook):
     name, old_phone, new_phone = args
     record = book.find(name)
@@ -50,6 +38,9 @@ def change_contact(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=1, max_args=1, error_message="Please provide only name to show the phone."
+)
 def show_phone(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -61,13 +52,16 @@ def show_phone(args, book: AddressBook):
     raise KeyError
 
 
-def show_all(book: AddressBook):
+def show_all(_args, book: AddressBook):
     if not book.data:
         return "No contacts found."
     return "\n".join(str(record) for record in book.data.values())
 
 
 @input_error
+@validate_args(
+    min_args=2, max_args=2, error_message="Please provide only contact name and birthday."
+)
 def add_birthday(args, book: AddressBook):
     name, birthday = args
     record = book.find(name)
@@ -78,6 +72,9 @@ def add_birthday(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=1, max_args=1, error_message="Please provide only name to show the birthday."
+)
 def show_birthday(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -89,10 +86,15 @@ def show_birthday(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=1,
+    max_args=1,
+    error_message="Please provide the number of days to check for upcoming birthdays.",
+)
 def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
 
-    if len(args) != 1 or not args[0].isdigit():
+    if not args[0].isdigit():
         raise ValueError(
             "Please provide the number of days to check for upcoming birthdays."
         )
@@ -100,7 +102,7 @@ def birthdays(args, book: AddressBook):
     (days,) = args
     days = int(days)
 
-    if days <= 0 or days > 365:
+    if days > 365:
         raise ValueError("Days must be a positive number and not exceed 365.")
 
     birthdays_by_day = book.get_upcoming_birthdays(days)
@@ -118,10 +120,8 @@ def birthdays(args, book: AddressBook):
 
 
 @input_error
+@validate_args(min_args=2, error_message="Please provide name and address: name address.")
 def add_address(args, book: AddressBook):
-    if len(args) < 2:
-        raise ValueError("Please provide name and address: name address.")
-
     name, *address_parts = args
     address = " ".join(address_parts)
 
@@ -133,6 +133,7 @@ def add_address(args, book: AddressBook):
 
 
 @input_error
+@validate_args(min_args=2, max_args=2, error_message="Please provide name and email.")
 def add_email(args, book: AddressBook):
     name, email = args
     record = book.find(name)
@@ -143,6 +144,7 @@ def add_email(args, book: AddressBook):
 
 
 @input_error
+@validate_args(min_args=1, max_args=1, error_message="Please provide only contact name.")
 def show_email(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -154,6 +156,11 @@ def show_email(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=2,
+    max_args=2,
+    error_message="Please provide only contact name and phone number.",
+)
 def delete_phone(args, book: AddressBook):
     name, phone = args
     record = book.find(name)
@@ -165,6 +172,7 @@ def delete_phone(args, book: AddressBook):
 
 
 @input_error
+@validate_args(min_args=1, max_args=1, error_message="Please provide only contact name.")
 def delete_email(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -176,6 +184,7 @@ def delete_email(args, book: AddressBook):
 
 
 @input_error
+@validate_args(min_args=1, max_args=1, error_message="Please provide only contact name.")
 def delete_address(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -187,6 +196,9 @@ def delete_address(args, book: AddressBook):
 
 
 @input_error
+@validate_args(
+    min_args=1, max_args=1, error_message="Please provide some query to search for."
+)
 def search_contacts(args, book: AddressBook):
     (query,) = args
     results = book.search(query)
@@ -258,7 +270,7 @@ def main():
         elif command == "show-phone":
             print(show_phone(args, book))
         elif command == "all":
-            print(show_all(book))
+            print(show_all(args, book))
         elif command == "add-birthday":
             print(add_birthday(args, book))
         elif command == "show-birthday":
