@@ -1,5 +1,7 @@
-[![codecov](https://codecov.io/gh/neoversity-ai-ml/project-group-20/graph/badge.svg?token=A26ZHG7CU6)](https://codecov.io/gh/neoversity-ai-ml/project-group-20)
-
+[![Python Version](https://img.shields.io/badge/python-3.13.7-blue.svg)](https://www.python.org/)
+[![Github Actions - CI](https://github.com/neoversity-ai-ml/project-group-20/actions/workflows/ci.yml/badge.svg)](https://github.com/neoversity-ai-ml/project-group-20/actions/workflows/ci.yml)
+[![Codecov Coverage](https://codecov.io/gh/neoversity-ai-ml/project-group-20/graph/badge.svg?token=A26ZHG7CU6)](https://codecov.io/gh/neoversity-ai-ml/project-group-20)
+[![CodeFactor](https://www.codefactor.io/repository/github/neoversity-ai-ml/project-group-20/badge)](https://www.codefactor.io/repository/github/neoversity-ai-ml/project-group-20)
 
 ![Made with VHS](https://vhs.charm.sh/vhs-479wqFz5RBcM4B6VFaESW.gif)
 
@@ -123,3 +125,5 @@ uv run pytest --cov
 
 We use `pytest-cov` to measure test coverage and upload the results to
 [Codecov](https://codecov.io/) every time the CI workflow runs.
+
+![Codecov Coverage Graph](https://codecov.io/gh/neoversity-ai-ml/project-group-20/graphs/sunburst.svg?token=A26ZHG7CU6)
