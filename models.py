@@ -157,14 +157,6 @@ class AddressBook(UserDict):
     def add_note(self, text):
         note = Note(text)
         self.notes.append(note)
-        return note
-
-    def show_notes(self):
-        if not self.notes:
-            return "No notes found."
-        return "\n".join(
-            f"{idx}. {note.value}" for idx, note in enumerate(self.notes, start=1)
-        )
 
     def edit_note(self, index, new_text):
         if not 1 <= index <= len(self.notes):
@@ -182,13 +174,11 @@ class AddressBook(UserDict):
             raise ValueError("Search keyword cannot be empty.")
 
         results = []
-        for idx, note in enumerate(self.notes, start=1):
+        for note in self.notes:
             if keyword in note.value.lower():
-                results.append(f"{idx}. {note.value}")
+                results.append(note)
 
-        if not results:
-            return "No matching notes found."
-        return "\n".join(results)
+        return results
 
 
 if __name__ == "__main__":

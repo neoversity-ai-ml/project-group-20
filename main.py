@@ -95,12 +95,6 @@ def birthdays(book: AddressBook):
 
     return "\n".join(output) if output else "No upcoming birthdays in the next week."
 
-@input_error
-def add_note(args, book: AddressBook):
-    text = " ".join(args)
-    book.add_note(text)
-    return "Note added."
-
 
 def show_notes(book: AddressBook):
     return book.show_notes()
@@ -124,7 +118,7 @@ def edit_note(args, book: AddressBook):
 
 @input_error
 def delete_note(args, book: AddressBook):
-    index = int(args[0])
+    index = int(args[0]) - 1
     book.delete_note(index)
     return "Note deleted."
 
