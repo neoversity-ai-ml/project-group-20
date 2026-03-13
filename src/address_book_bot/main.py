@@ -1,7 +1,7 @@
-from data_loading import load_data, save_data
-from models import AddressBook, Record
-from utils import input_error, validate_args, parse_input
-from command_resolvers import CommandResolver, FuzzyCommandResolver
+from .data_loading import load_data, save_data
+from .models import AddressBook, Record
+from .utils import input_error, validate_args, parse_input
+from .command_resolvers import CommandResolver, FuzzyCommandResolver
 
 
 @input_error

@@ -28,19 +28,19 @@ class Phone(Field):
     >>> Phone("invalid-phone")
     Traceback (most recent call last):
         ...
-    ValueError: Phone number must be 10 digits, optionally starting with +.
+    ValueError: Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses.
     >>> Phone("12345")
     Traceback (most recent call last):
         ...
-    ValueError: Phone number must be 10 digits, optionally starting with +.
+    ValueError: Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses.
     """
 
     def __init__(self, value):
-        if not re.fullmatch(r'^\+?[\d\s\-\(\)]{7,15}$', value):
+        if not re.fullmatch(r"^\+?[\d\s\-\(\)]{7,15}$", value):
             raise ValueError(
                 "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses."
             )
-        digits = re.sub(r'[\s\-\(\)]', '', value).lstrip('+')
+        digits = re.sub(r"[\s\-\(\)]", "", value).lstrip("+")
         if len(set(digits)) == 1:
             raise ValueError("Phone number cannot consist of all identical digits.")
         super().__init__(value)

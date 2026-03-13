@@ -13,7 +13,7 @@ Type "rm addressbook.pkl"
 Enter
 Type "clear"
 Enter
-Type "python main.py"
+Type "uv run python -m src.address_book_bot.main"
 Enter
 Show
 

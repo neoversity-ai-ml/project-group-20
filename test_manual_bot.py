@@ -1,15 +1,16 @@
-from main import (
+from datetime import datetime, timedelta
+
+from src.address_book_bot.main import (
     add_contact,
     change_contact,
     show_phone,
-    show_all,
     add_birthday,
     show_birthday,
     birthdays,
     add_address,
 )
-from models import AddressBook
-from datetime import datetime, timedelta
+from src.address_book_bot.models import AddressBook
+
 
 if __name__ == "__main__":  # pragma: no cover
     book = AddressBook()

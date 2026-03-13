@@ -4,6 +4,9 @@ version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = []
 
+[project.scripts]
+address-book-bot = "address_book_bot.main:main"
+
 [dependency-groups]
 dev = [
     "pre-commit",
@@ -22,16 +25,13 @@ test = [
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --maxfail=1"
-testpaths = ["."]
-pythonpath = "."
+testpaths = ["src", "tests"]
+pythonpath = ["src", "tests"]
 
 [tool.coverage.run]
-source = ["."]
+source = ["src"]
 branch = true
-omit = [
-    "*/__init__.py",
-    "tests/*",
-]
+omit = ["*/__init__.py"]
 
 [tool.coverage.report]
 exclude_lines = [

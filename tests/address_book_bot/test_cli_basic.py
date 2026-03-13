@@ -1,11 +1,11 @@
-from tests.cli.helpers import (
+from helpers import (
     run_cli,
     mock_data_io,
     assert_mock_called_n_times_with,
     formatted_output,
 )
 
-from models import AddressBook
+from address_book_bot.models import AddressBook
 
 
 def test_hello(capsys, monkeypatch):
