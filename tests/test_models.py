@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 
-from models import AddressBook, Record
+from address_book_bot.models import AddressBook, Record
 
 
 @pytest.fixture
