@@ -215,9 +215,6 @@ class AddressBook(UserDict):
         note = Note(text)
         self.notes.append(note)
 
-    def show_notes(self):
-        return self.notes
-
     def edit_note(self, index, new_text):
         if not 1 <= index <= len(self.notes):
             raise ValueError("Invalid note number.")

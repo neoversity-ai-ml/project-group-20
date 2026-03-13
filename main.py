@@ -260,8 +260,10 @@ def add_note(args, book: AddressBook):
     return "Note added."
 
 
-def show_notes(args, book: AddressBook):
-    return book.show_notes()
+def show_notes(_args, book: AddressBook):
+    if not book.notes:
+        return "No notes found."
+    return "\n".join(str(note) for note in book.notes)
 
 
 @input_error
@@ -274,7 +276,10 @@ def delete_note(args, book: AddressBook):
 @input_error
 def search_notes(args, book: AddressBook):
     keyword = " ".join(args)
-    return book.search_notes(keyword)
+    notes = book.search_notes(keyword)
+    if not notes:
+        return "No notes found."
+    return "\n".join(str(note) for note in notes)
 
 
 @input_error
