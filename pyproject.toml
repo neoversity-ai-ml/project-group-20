@@ -21,6 +21,7 @@ lint = [
 test = [
   "pytest",
   "pytest-cov",
+  "pytest-freezer",
 ]
 
 [tool.pytest.ini_options]

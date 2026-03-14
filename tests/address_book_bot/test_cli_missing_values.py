@@ -9,7 +9,10 @@ from helpers import (
 
 from address_book_bot.models import AddressBook
 
+import pytest
 
+
+@pytest.mark.freeze_time("2026-03-11")
 def test_error_handling(capsys, monkeypatch):
     book = AddressBook()
     bob_bday = date.today()

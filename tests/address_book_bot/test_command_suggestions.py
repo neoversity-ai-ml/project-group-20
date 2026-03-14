@@ -279,6 +279,7 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             dedent("""\
             Command not found. Did you mean:
               phone Name
+              show-notes Name
               change Name"""),
         ),
         (
