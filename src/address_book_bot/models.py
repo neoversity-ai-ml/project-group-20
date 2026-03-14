@@ -285,5 +285,4 @@ class AddressBook(UserDict):
             if in_note_text or in_tags:
                 results.append(note)
 
-
         return results
