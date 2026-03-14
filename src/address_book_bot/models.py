@@ -2,7 +2,7 @@ import re
 from collections import Counter, UserDict
 from datetime import date, datetime, timedelta
 
-from constant import STOP_WORDS, WORD_PATTERN
+from .constant import STOP_WORDS, WORD_PATTERN
 
 
 class Field:
