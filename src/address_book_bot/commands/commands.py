@@ -22,7 +22,7 @@ from address_book_bot.commands.handlers.note_handlers import (
     edit_note,
     delete_note,
     sort_notes,
-    search_by_tag
+    search_by_tag,
 )
 
 

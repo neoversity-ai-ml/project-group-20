@@ -1,6 +1,7 @@
 import re
 from collections import UserDict, Counter
 from datetime import date, datetime, timedelta
+from constant import STOP_WORDS, WORD_PATTERN
 
 
 class Field:
@@ -91,14 +92,8 @@ class Note(Field):
         self.tags = [word for word, count in self._word_counts.most_common(3)]
 
     def _calculate_word_counts(self, text):
-        words = re.findall(r'[a-zA-Zа-яА-ЯїЇіІєЄґҐ]{3,}', text.lower())
-        stop_words = {'the', 'and', 'with', 'for', 'this', 'that', 'from', 'about', 'your', 'their',
-            'been', 'were', 'have', 'will', 'would', 'could', 'should', 'there', 'here',
-            'який', 'така', 'таке', 'які', 'цього', 'тому', 'котрий', 'був', 'була',
-            'було', 'були', 'стати', 'має', 'через', 'після', 'перед', 'просто', 'тільки',
-            'дуже', 'якщо', 'коли', 'хоча', 'ніби', 'адже', 'щоби', 'для', 'над', 'під'
-        }
-        filtered_words = [word for word in words if word not in stop_words]
+        words = WORD_PATTERN.findall(text.lower())
+        filtered_words = [word for word in words if word not in STOP_WORDS]
         return Counter(filtered_words)
 
     def get_tag_count(self, tag):
@@ -255,11 +250,13 @@ class AddressBook(UserDict):
         return filtered
 
     def sort_notes_by_tags(self):
-        self.notes.sort(key=lambda note: (
-                        len(note.tags) == 0,
-                        note.tags[0].lower() if note.tags else "",
-                        -note.get_tag_count(note.tags[0]) if note.tags else 0
-                        ))
+        self.notes.sort(
+            key=lambda note: (
+                len(note.tags) == 0,
+                note.tags[0].lower() if note.tags else "",
+                -note.get_tag_count(note.tags[0]) if note.tags else 0,
+            )
+        )
         return self.notes
 
     def search(self, query):
