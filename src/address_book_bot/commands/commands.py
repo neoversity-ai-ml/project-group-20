@@ -57,7 +57,7 @@ fuzzy_resolver = FuzzyCommandResolver(
         "birthdays": "birthdays",
         "phone": "phone Name",
         "add-note": "add-note some text",
-        "notes": "notes",
+        "show-notes": "show-notes",
         "find-note": "find-note keyword",
         "edit-note": "edit-note 1 new text",
         "delete-note": "delete-note 1",
