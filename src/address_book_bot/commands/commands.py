@@ -18,8 +18,10 @@ from address_book_bot.commands.handlers.note_handlers import (
     add_note,
     delete_note,
     edit_note,
+    search_by_tag,
     search_notes,
     show_notes,
+    sort_notes,
 )
 from address_book_bot.commands.resolvers import CommandResolver, FuzzyCommandResolver
 
@@ -70,6 +72,8 @@ fuzzy_resolver = FuzzyCommandResolver(
         "find-note": "find-note keyword",
         "edit-note": "edit-note 1 new text",
         "delete-note": "delete-note 1",
+        "sort-notes": "sort-notes",
+        "search-tag": "search-tag any_tag",
     }
 )
 
@@ -88,6 +92,8 @@ COMMANDS = {
     "find-note": search_notes,
     "edit-note": edit_note,
     "delete-note": delete_note,
+    "sort-notes": sort_notes,
+    "search-tag": search_by_tag,
     "hello": hello,
     "help": help_command,
     "add": add_contact,
@@ -147,6 +153,8 @@ delete-email <name>                     - Delete a contact's email
 Notes:
 add-note <text>                         - Add a new note
 show-notes                              - Show all notes
+sort-notes                              - Sort all notes and show them
 find-note <keyword>                     - Search for notes by keyword
+search-tag <tag>                        - Search for notes by tag
 edit-note <note_number> <new_text>      - Edit an existing note
 delete-note <note_number>               - Delete a note by its number"""
