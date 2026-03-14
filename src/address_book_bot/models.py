@@ -100,7 +100,7 @@ class Note(Field):
         }
         filtered_words = [word for word in words if word not in stop_words]
         return Counter(filtered_words)
-    
+
     def get_tag_count(self, tag):
         return self._word_counts.get(tag.lower(), 0)
 
@@ -247,13 +247,13 @@ class AddressBook(UserDict):
             raise ValueError("Search keyword cannot be empty.")
 
         return [note for note in self.notes if keyword in note.value.lower()]
-    
+
     def search_notes_by_tag(self, tag):
         tag = tag.strip().lower()
         filtered = [note for note in self.notes if tag in note.tags]
         filtered.sort(key=lambda n: (-n.get_tag_count(tag), n.value.lower()))
         return filtered
-    
+
     def sort_notes_by_tags(self):
         self.notes.sort(key=lambda note: (
                         len(note.tags) == 0,
@@ -283,7 +283,7 @@ class AddressBook(UserDict):
             if record.address and query in record.address.value.lower():
                 results.append(record)
                 continue
-        
+
         for note in self.notes:
             in_note_text = query in note.value.lower()
             in_tags = any(query in tag.lower() for tag in note.tags)
