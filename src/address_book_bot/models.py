@@ -1,6 +1,6 @@
 import re
 from collections import UserDict
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 
 class Field:
@@ -69,7 +69,7 @@ class Birthday(Field):
 
     def __init__(self, value):
         try:
-            self.value = date.strptime(value, "%d.%m.%Y")
+            self.value = datetime.strptime(value, "%d.%m.%Y").date()
         except ValueError as err:
             raise ValueError("Invalid date format. Use DD.MM.YYYY") from err
 
