@@ -8,5 +8,6 @@ addressbook.pkl
 htmlcov/
 .coverage
 coverage.*
+junit.xml
 
 *.egg-info/
