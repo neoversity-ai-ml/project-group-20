@@ -21,6 +21,8 @@ from address_book_bot.commands.handlers.note_handlers import (
     search_notes,
     edit_note,
     delete_note,
+    sort_notes,
+    search_by_tag
 )
 
 
@@ -61,6 +63,8 @@ fuzzy_resolver = FuzzyCommandResolver(
         "find-note": "find-note keyword",
         "edit-note": "edit-note 1 new text",
         "delete-note": "delete-note 1",
+        "sort-notes": "sort-notes",
+        "search-tag": "search-tag any_tag",
     }
 )
 
@@ -75,6 +79,8 @@ COMMANDS = {
     "find-note": search_notes,
     "edit-note": edit_note,
     "delete-note": delete_note,
+    "sort-notes": sort_notes,
+    "search-tag": search_by_tag,
     "hello": hello,
     "add": add_contact,
     "change": change_contact,
@@ -132,6 +138,8 @@ DESCRIPTION_TEXT = """\
         Notes:
         add-note <text>                         - Add a new note
         show-notes                              - Show all notes
+        sort-notes                              - Sort all notes and show them
         find-note <keyword>                     - Search for notes by keyword
+        search-tag <tag>                        - Search for notes by tag
         edit-note <note_number> <new_text>      - Edit an existing note
         delete-note <note_number>               - Delete a note by its number"""

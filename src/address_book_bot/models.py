@@ -1,5 +1,5 @@
 import re
-from collections import UserDict
+from collections import UserDict, Counter
 from datetime import date, datetime, timedelta
 
 
@@ -87,9 +87,26 @@ class Note(Field):
         if not value:
             raise ValueError("Note cannot be empty.")
         super().__init__(value)
+        self._word_counts = self._calculate_word_counts(value)
+        self.tags = [word for word, count in self._word_counts.most_common(3)]
+
+    def _calculate_word_counts(self, text):
+        words = re.findall(r'[a-zA-Zа-яА-ЯїЇіІєЄґҐ]{3,}', text.lower())
+        stop_words = {'the', 'and', 'with', 'for', 'this', 'that', 'from', 'about', 'your', 'their',
+            'been', 'were', 'have', 'will', 'would', 'could', 'should', 'there', 'here',
+            'який', 'така', 'таке', 'які', 'цього', 'тому', 'котрий', 'був', 'була',
+            'було', 'були', 'стати', 'має', 'через', 'після', 'перед', 'просто', 'тільки',
+            'дуже', 'якщо', 'коли', 'хоча', 'ніби', 'адже', 'щоби', 'для', 'над', 'під'
+        }
+        filtered_words = [word for word in words if word not in stop_words]
+        return Counter(filtered_words)
+    
+    def get_tag_count(self, tag):
+        return self._word_counts.get(tag.lower(), 0)
 
     def __repr__(self):
-        return f"Note('{self.value}')"
+        tags_str = ", ".join(self.tags)
+        return f"Note('{self.value}') [Tags: {tags_str}]"
 
 
 class Record:
@@ -212,6 +229,7 @@ class AddressBook(UserDict):
     def add_note(self, text):
         note = Note(text)
         self.notes.append(note)
+        return f"Note added with tags: {', '.join(note.tags)}"
 
     def edit_note(self, index, new_text):
         if index >= len(self.notes):
@@ -229,6 +247,20 @@ class AddressBook(UserDict):
             raise ValueError("Search keyword cannot be empty.")
 
         return [note for note in self.notes if keyword in note.value.lower()]
+    
+    def search_notes_by_tag(self, tag):
+        tag = tag.strip().lower()
+        filtered = [note for note in self.notes if tag in note.tags]
+        filtered.sort(key=lambda n: (-n.get_tag_count(tag), n.value.lower()))
+        return filtered
+    
+    def sort_notes_by_tags(self):
+        self.notes.sort(key=lambda note: (
+                        len(note.tags) == 0,
+                        note.tags[0].lower() if note.tags else "",
+                        -note.get_tag_count(note.tags[0]) if note.tags else 0
+                        ))
+        return self.notes
 
     def search(self, query):
         query = query.lower()
@@ -251,5 +283,12 @@ class AddressBook(UserDict):
             if record.address and query in record.address.value.lower():
                 results.append(record)
                 continue
+        
+        for note in self.notes:
+            in_note_text = query in note.value.lower()
+            in_tags = any(query in tag.lower() for tag in note.tags)
+
+            if in_note_text or in_tags:
+                results.append(note)
 
         return results
