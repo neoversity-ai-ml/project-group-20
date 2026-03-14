@@ -44,9 +44,7 @@ def edit_note(args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide a tag to show notes with it."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide a tag to show notes with it.")
 def search_by_tag(args, book: AddressBook):
     if not args:
         return "Please provide a tag."
@@ -64,11 +62,7 @@ def sort_notes(args, book: AddressBook):
     book.sort_notes_by_tags()
     result = []
     for i, note in enumerate(book.notes, 1):
-        tags_str = (
-            f"[{', '.join(note.tags)}]"
-            if hasattr(note, "tags") and note.tags
-            else "[no tags]"
-        )
+        tags_str = f"[{', '.join(note.tags)}]" if hasattr(note, "tags") and note.tags else "[no tags]"
         result.append(f"{i}. {tags_str} {note.value}")
 
     return "\n".join(result)

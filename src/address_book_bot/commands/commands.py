@@ -17,11 +17,11 @@ from address_book_bot.commands.handlers.contact_handlers import (
 from address_book_bot.commands.handlers.note_handlers import (
     add_note,
     delete_note,
-    sort_notes,
-    search_by_tag,
     edit_note,
+    search_by_tag,
     search_notes,
     show_notes,
+    sort_notes,
 )
 from address_book_bot.commands.resolvers import CommandResolver, FuzzyCommandResolver
 
