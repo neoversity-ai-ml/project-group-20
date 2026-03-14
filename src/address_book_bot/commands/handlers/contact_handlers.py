@@ -36,9 +36,7 @@ def change_contact(args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide only name to show the phone."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide only name to show the phone.")
 def show_phone(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -57,9 +55,7 @@ def show_all(_args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=2, max_args=2, error_message="Please provide only contact name and birthday."
-)
+@validate_args(min_args=2, max_args=2, error_message="Please provide only contact name and birthday.")
 def add_birthday(args, book: AddressBook):
     name, birthday = args
     record = book.find(name)
@@ -70,9 +66,7 @@ def add_birthday(args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide only name to show the birthday."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide only name to show the birthday.")
 def show_birthday(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -93,9 +87,7 @@ def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
 
     if not args[0].isdigit():
-        raise ValueError(
-            "Please provide the number of days to check for upcoming birthdays."
-        )
+        raise ValueError("Please provide the number of days to check for upcoming birthdays.")
 
     (days,) = args
     days = int(days)
@@ -112,9 +104,7 @@ def birthdays(args, book: AddressBook):
         d = entry["congratulation_date"]
         output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
-    return (
-        "\n".join(output) if output else "No upcoming birthdays during requested period."
-    )
+    return "\n".join(output) if output else "No upcoming birthdays during requested period."
 
 
 @input_error
@@ -194,9 +184,7 @@ def delete_address(args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide some query to search for."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide some query to search for.")
 def search_contacts(args, book: AddressBook):
     (query,) = args
     results = book.search(query)

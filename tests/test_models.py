@@ -1,5 +1,6 @@
-import pytest
 from datetime import date
+
+import pytest
 
 from address_book_bot.models import AddressBook, Record
 

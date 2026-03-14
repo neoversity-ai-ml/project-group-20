@@ -1,28 +1,27 @@
-from address_book_bot.commands.resolvers import CommandResolver, FuzzyCommandResolver
 from address_book_bot.commands.handlers.contact_handlers import (
-    add_contact,
-    change_contact,
-    show_phone,
-    show_all,
-    add_birthday,
-    show_birthday,
-    birthdays,
     add_address,
+    add_birthday,
+    add_contact,
     add_email,
-    show_email,
-    delete_phone,
-    delete_email,
+    birthdays,
+    change_contact,
     delete_address,
+    delete_email,
+    delete_phone,
     search_contacts,
+    show_all,
+    show_birthday,
+    show_email,
+    show_phone,
 )
 from address_book_bot.commands.handlers.note_handlers import (
     add_note,
-    show_notes,
-    search_notes,
-    edit_note,
     delete_note,
+    edit_note,
+    search_notes,
+    show_notes,
 )
-
+from address_book_bot.commands.resolvers import CommandResolver, FuzzyCommandResolver
 
 command_resolver = CommandResolver(
     [
