@@ -1,8 +1,8 @@
 from helpers import (
-    run_cli,
-    mock_data_io,
     assert_mock_called_n_times_with,
     formatted_output,
+    mock_data_io,
+    run_cli,
 )
 
 from address_book_bot.models import AddressBook
@@ -27,4 +27,4 @@ def test_hello(capsys, monkeypatch):
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)
-        assert_mock_called_n_times_with(mock_save, len(commands) - 3, (book,))
+        assert_mock_called_n_times_with(mock_save, len(commands) - 4, (book,))

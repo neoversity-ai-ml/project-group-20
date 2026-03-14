@@ -1,13 +1,11 @@
 import re
+from collections.abc import Iterable
 from difflib import get_close_matches
-from typing import Iterable
 
 
 class CommandResolver:
     def __init__(self, commands: Iterable[tuple[str, tuple[str, ...]]]):
-        self.commands = [
-            (re.compile(pattern, re.IGNORECASE), result) for pattern, result in commands
-        ]
+        self.commands = [(re.compile(pattern, re.IGNORECASE), result) for pattern, result in commands]
 
     def resolve(self, text: str) -> list[str] | None:
         text = text.lower().strip()

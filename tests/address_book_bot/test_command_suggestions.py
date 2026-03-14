@@ -1,10 +1,10 @@
 from textwrap import dedent
 
 from helpers import (
-    run_cli,
-    mock_data_io,
     assert_mock_called_n_times_with,
     formatted_output,
+    mock_data_io,
+    run_cli,
 )
 
 from address_book_bot.models import AddressBook
@@ -202,7 +202,7 @@ def test_regexp_resolved_commands(capsys, monkeypatch):
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)
-        assert_mock_called_n_times_with(mock_save, len(commands), (book,))
+        assert_mock_called_n_times_with(mock_save, 0, (book,))
 
 
 def test_fuzzy_resolved_commands(capsys, monkeypatch):
@@ -213,12 +213,14 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             "helloo",
             dedent("""\
             Command not found. Did you mean:
-              hello"""),
+              hello
+              help"""),
         ),
         (
             "HE LLO",
             dedent("""\
             Command not found. Did you mean:
+              help LLO
               phone LLO
               hello LLO
               change LLO"""),
@@ -241,6 +243,7 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             dedent("""\
             Command not found. Did you mean:
               add John 1234567890
+              add-address John 1234567890
               add-note John 1234567890
               add-birthday John 1234567890"""),
         ),
@@ -249,6 +252,8 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             dedent("""\
             Command not found. Did you mean:
               change Name 123 456
+              change-email Name 123 456
+              change-address Name 123 456
               phone Name 123 456"""),
         ),
         (
@@ -279,13 +284,16 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
             dedent("""\
             Command not found. Did you mean:
               phone Name
+              delete-phone Name
+              show-notes Name
               change Name"""),
         ),
         (
             "helloo ",
             dedent("""\
             Command not found. Did you mean:
-              hello"""),
+              hello
+              help"""),
         ),
     )
 
@@ -296,4 +304,4 @@ def test_fuzzy_resolved_commands(capsys, monkeypatch):
         assert run_cli(commands, capsys, monkeypatch) == expected
 
         mock_load.assert_called_once_with(default_factory=AddressBook)
-        assert_mock_called_n_times_with(mock_save, len(commands), (book,))
+        assert_mock_called_n_times_with(mock_save, 0, (book,))

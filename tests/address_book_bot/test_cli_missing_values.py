@@ -1,15 +1,17 @@
 from datetime import date
 
+import pytest
 from helpers import (
-    run_cli,
-    mock_data_io,
     assert_mock_called_n_times_with,
     formatted_output,
+    mock_data_io,
+    run_cli,
 )
 
 from address_book_bot.models import AddressBook
 
 
+@pytest.mark.freeze_time("2026-03-11")
 def test_error_handling(capsys, monkeypatch):
     book = AddressBook()
     bob_bday = date.today()

@@ -1,7 +1,7 @@
+from address_book_bot.commands.commands import COMMANDS, DESCRIPTION_TEXT, suggest_command
 from address_book_bot.data_loading import load_data, save_data
 from address_book_bot.models import AddressBook
 from address_book_bot.utils import parse_input
-from address_book_bot.commands.commands import COMMANDS, DESCRIPTION_TEXT, suggest_command
 
 
 def main():
@@ -28,6 +28,7 @@ def main():
 
         if handler:
             print(handler(args, book))
+            save_data(book)
         else:
             fallbacks = suggest_command(user_input, command, args)
             if fallbacks:
@@ -36,8 +37,6 @@ def main():
                     print(f"  {fallback}")
             else:
                 print("Invalid command.")
-
-        save_data(book)
 
 
 if __name__ == "__main__":  # pragma: no cover

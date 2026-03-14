@@ -1,16 +1,15 @@
 from datetime import datetime, timedelta
 
 from src.address_book_bot.main import (
-    add_contact,
-    change_contact,
-    show_phone,
-    add_birthday,
-    show_birthday,
-    birthdays,
     add_address,
+    add_birthday,
+    add_contact,
+    birthdays,
+    change_contact,
+    show_birthday,
+    show_phone,
 )
 from src.address_book_bot.models import AddressBook
-
 
 if __name__ == "__main__":  # pragma: no cover
     book = AddressBook()
@@ -25,27 +24,11 @@ if __name__ == "__main__":  # pragma: no cover
     print(change_contact(["John", "1234567890", "1112223333"], book))
     print(show_phone(["John"], book))
 
-    print(
-        add_birthday(
-            ["John", (datetime.today() + timedelta(days=2)).strftime("%d.%m.%Y")], book
-        )
-    )
+    print(add_birthday(["John", (datetime.today() + timedelta(days=2)).strftime("%d.%m.%Y")], book))
     print(show_birthday(["John"], book))
-    print(
-        add_birthday(
-            ["Jack", (datetime.today() + timedelta(days=15)).strftime("%d.%m.%Y")], book
-        )
-    )
-    print(
-        add_birthday(
-            ["Bob", (datetime.today() + timedelta(days=1)).strftime("%d.%m.%Y")], book
-        )
-    )
-    print(
-        add_birthday(
-            ["Bobs", (datetime.today() + timedelta(days=3)).strftime("%d.%m.%Y")], book
-        )
-    )
+    print(add_birthday(["Jack", (datetime.today() + timedelta(days=15)).strftime("%d.%m.%Y")], book))
+    print(add_birthday(["Bob", (datetime.today() + timedelta(days=1)).strftime("%d.%m.%Y")], book))
+    print(add_birthday(["Bobs", (datetime.today() + timedelta(days=3)).strftime("%d.%m.%Y")], book))
 
     # valid cases
     print(add_address(["John", "Main St, Kyiv, 01001, Ukraine"], book))

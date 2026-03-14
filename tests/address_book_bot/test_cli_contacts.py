@@ -1,10 +1,10 @@
 from textwrap import dedent
 
 from helpers import (
-    run_cli,
-    mock_data_io,
     assert_mock_called_n_times_with,
     formatted_output,
+    mock_data_io,
+    run_cli,
 )
 
 from address_book_bot.models import AddressBook
@@ -27,8 +27,8 @@ def test_contacts_management(capsys, monkeypatch):
         ("add-address John 123 Main St", "Address added."),
         ("add-email John john@example.com", "Email added."),
         ("show-email John", "john@example.com"),
-        ("change-email John john.doe@example.com", "Email added."),
-        ("change-address John 456 Elm St", "Address added."),
+        ("change-email John john.doe@example.com", "Email updated."),
+        ("change-address John 456 Elm St", "Address updated."),
         ("delete-phone John 2987654321", "Phone 2987654321 removed."),
         ("phone John", "No phone numbers found for this contact."),
         (

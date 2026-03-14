@@ -38,9 +38,7 @@ class Phone(Field):
 
     def __init__(self, value):
         if not re.fullmatch(r"^\+?[\d\s\-\(\)]{7,15}$", value):
-            raise ValueError(
-                "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses."
-            )
+            raise ValueError("Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses.")
         digits = re.sub(r"[\s\-\(\)]", "", value).lstrip("+")
         if len(set(digits)) == 1:
             raise ValueError("Phone number cannot consist of all identical digits.")
@@ -63,7 +61,7 @@ class Birthday(Field):
 
     >>> b = Birthday("25.12.1990")
     >>> b.value
-    datetime.datetime(1990, 12, 25, 0, 0)
+    datetime.date(1990, 12, 25)
     >>> Birthday("32.12.1990")
     Traceback (most recent call last):
         ...
@@ -72,9 +70,9 @@ class Birthday(Field):
 
     def __init__(self, value):
         try:
-            self.value = datetime.strptime(value, "%d.%m.%Y")
-        except ValueError:
-            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+            self.value = datetime.strptime(value, "%d.%m.%Y").date()
+        except ValueError as err:
+            raise ValueError("Invalid date format. Use DD.MM.YYYY") from err
 
     def __str__(self):
         return self.value.strftime("%d.%m.%Y")
@@ -102,6 +100,11 @@ class Note(Field):
     def __repr__(self):
         tags_str = ", ".join(self.tags)
         return f"Note('{self.value}') [Tags: {tags_str}]"
+
+
+class Address(Field):
+    def __init__(self, value):
+        super().__init__(value)
 
 
 class Record:
@@ -166,14 +169,6 @@ class Record:
         return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}{address_str}{email_str}"
 
 
-class Address(Field):
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return self.value
-
-
 class AddressBook(UserDict):
     """Class for managing an address book of contacts."""
 
@@ -201,7 +196,7 @@ class AddressBook(UserDict):
 
         for record in self.data.values():
             if record.birthday:
-                birthday_this_year = record.birthday.value.date().replace(year=today.year)
+                birthday_this_year = record.birthday.value.replace(year=today.year)
                 if birthday_this_year < today:
                     birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
@@ -210,9 +205,7 @@ class AddressBook(UserDict):
                     congratulation_date = birthday_this_year
                     if congratulation_date.strftime("%A") in ["Saturday", "Sunday"]:
                         days_until_monday = (7 - congratulation_date.weekday()) % 7
-                        congratulation_date = congratulation_date + timedelta(
-                            days=days_until_monday
-                        )
+                        congratulation_date = congratulation_date + timedelta(days=days_until_monday)
                     upcoming.append(
                         {
                             "name": record.name.value,
@@ -227,12 +220,12 @@ class AddressBook(UserDict):
         return f"Note added with tags: {', '.join(note.tags)}"
 
     def edit_note(self, index, new_text):
-        if index >= len(self.notes):
+        if index < 0 or index >= len(self.notes):
             raise ValueError("Invalid note number.")
         self.notes[index] = Note(new_text)
 
     def delete_note(self, index):
-        if index >= len(self.notes):
+        if index < 0 or index >= len(self.notes):
             raise ValueError("Invalid note number.")
         del self.notes[index]
 
@@ -281,11 +274,16 @@ class AddressBook(UserDict):
                 results.append(record)
                 continue
 
+            if record.birthday and query in str(record.birthday).lower():
+                results.append(record)
+                continue
+
         for note in self.notes:
             in_note_text = query in note.value.lower()
             in_tags = any(query in tag.lower() for tag in note.tags)
 
             if in_note_text or in_tags:
                 results.append(note)
+
 
         return results

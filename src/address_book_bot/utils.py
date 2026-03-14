@@ -18,9 +18,7 @@ def input_error(func):
     return inner
 
 
-def validate_args(
-    min_args=None, max_args=None, error_message="Invalid number of arguments."
-):
+def validate_args(min_args=None, max_args=None, error_message="Invalid number of arguments."):
     def decorator(func):
         @wraps(func)
         def wrapper(args, *rest, **kwargs):

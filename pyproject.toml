@@ -21,10 +21,11 @@ lint = [
 test = [
   "pytest",
   "pytest-cov",
+  "pytest-freezer",
 ]
 
 [tool.pytest.ini_options]
-addopts = "--doctest-modules --maxfail=1"
+addopts = "--doctest-modules"
 testpaths = ["src", "tests"]
 pythonpath = ["src", "tests"]
 
