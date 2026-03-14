@@ -60,8 +60,9 @@ def add_birthday(args, book: AddressBook):
     name, birthday = args
     record = book.find(name)
     if record:
+        is_update = record.birthday is not None
         record.add_birthday(birthday)
-        return "Birthday added."
+        return "Birthday updated." if is_update else "Birthday added."
     raise KeyError
 
 
@@ -104,7 +105,7 @@ def birthdays(args, book: AddressBook):
         d = entry["congratulation_date"]
         output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
-    return "\n".join(output) if output else "No upcoming birthdays during requested period."
+    return "\n".join(output)
 
 
 @input_error
@@ -115,8 +116,9 @@ def add_address(args, book: AddressBook):
 
     record = book.find(name)
     if record:
+        is_update = record.address is not None
         record.add_address(address)
-        return "Address added."
+        return "Address updated." if is_update else "Address added."
     raise KeyError
 
 
@@ -126,8 +128,9 @@ def add_email(args, book: AddressBook):
     name, email = args
     record = book.find(name)
     if record:
+        is_update = record.email is not None
         record.add_email(email)
-        return "Email added."
+        return "Email updated." if is_update else "Email added."
     raise KeyError
 
 
