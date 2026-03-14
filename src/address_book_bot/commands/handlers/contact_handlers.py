@@ -36,9 +36,7 @@ def change_contact(args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide only name to show the phone."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide only name to show the phone.")
 def show_phone(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -57,22 +55,19 @@ def show_all(_args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=2, max_args=2, error_message="Please provide only contact name and birthday."
-)
+@validate_args(min_args=2, max_args=2, error_message="Please provide only contact name and birthday.")
 def add_birthday(args, book: AddressBook):
     name, birthday = args
     record = book.find(name)
     if record:
+        is_update = record.birthday is not None
         record.add_birthday(birthday)
-        return "Birthday added."
+        return "Birthday updated." if is_update else "Birthday added."
     raise KeyError
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide only name to show the birthday."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide only name to show the birthday.")
 def show_birthday(args, book: AddressBook):
     (name,) = args
     record = book.find(name)
@@ -93,9 +88,7 @@ def birthdays(args, book: AddressBook):
     """Shows contacts with birthdays in the upcoming week."""
 
     if not args[0].isdigit():
-        raise ValueError(
-            "Please provide the number of days to check for upcoming birthdays."
-        )
+        raise ValueError("Please provide the number of days to check for upcoming birthdays.")
 
     (days,) = args
     days = int(days)
@@ -112,9 +105,7 @@ def birthdays(args, book: AddressBook):
         d = entry["congratulation_date"]
         output.append(f"{d.strftime('%d.%m.%Y')} {entry['name']} ({d.strftime('%A')})")
 
-    return (
-        "\n".join(output) if output else "No upcoming birthdays during requested period."
-    )
+    return "\n".join(output)
 
 
 @input_error
@@ -125,8 +116,9 @@ def add_address(args, book: AddressBook):
 
     record = book.find(name)
     if record:
+        is_update = record.address is not None
         record.add_address(address)
-        return "Address added."
+        return "Address updated." if is_update else "Address added."
     raise KeyError
 
 
@@ -136,8 +128,9 @@ def add_email(args, book: AddressBook):
     name, email = args
     record = book.find(name)
     if record:
+        is_update = record.email is not None
         record.add_email(email)
-        return "Email added."
+        return "Email updated." if is_update else "Email added."
     raise KeyError
 
 
@@ -194,9 +187,7 @@ def delete_address(args, book: AddressBook):
 
 
 @input_error
-@validate_args(
-    min_args=1, max_args=1, error_message="Please provide some query to search for."
-)
+@validate_args(min_args=1, max_args=1, error_message="Please provide some query to search for.")
 def search_contacts(args, book: AddressBook):
     (query,) = args
     results = book.search(query)
