@@ -34,7 +34,7 @@ def main():
         if handler:
             result = handler(args, book)
             if result:
-                (print_error if _is_error(result) else print_success)(result)
+                (print_error if _is_error(str(result)) else print_success)(result)
             save_data(book)
         else:
             fallbacks = suggest_command(user_input, command, args)

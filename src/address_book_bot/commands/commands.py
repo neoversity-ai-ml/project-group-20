@@ -126,37 +126,42 @@ def suggest_command(user_input, command, args):
 
 
 DESCRIPTION_TEXT = """\
-Available commands:
-
-hello                                   - Greet the bot
-help                                    - Show available commands
-close / exit                            - Exit the program
-
-Contacts:
-add <name> <phone>                      - Add a new contact
-change <name> <old_phone> <new_phone>   - Change a contact's phone number
-phone <name>                            - Show a contact's phone number(s)
-all                                     - Show all contacts
-search <query>                          - Search contacts by name, phone, email, address, or birthday
-
-add-birthday <name> <DD.MM.YYYY>        - Add or update a contact's birthday
-show-birthday <name>                    - Show a contact's birthday
-birthdays <days>                        - Show birthdays in the next <days> days
-
-add-address <name> <address>            - Add a contact's address
-change-address <name> <new_address>     - Change a contact's address
-delete-address <name>                   - Delete a contact's address
-
-add-email <name> <email>                - Add a contact's email
-show-email <name>                       - Show a contact's email
-change-email <name> <new_email>         - Change a contact's email
-delete-email <name>                     - Delete a contact's email
-
-Notes:
-add-note <text>                         - Add a new note
-show-notes                              - Show all notes
-sort-notes                              - Sort all notes and show them
-find-note <keyword>                     - Search for notes by keyword
-search-tag <tag>                        - Search for notes by tag
-edit-note <note_number> <new_text>      - Edit an existing note
-delete-note <note_number>               - Delete a note by its number"""
+                    Assistant Bot Commands                    \n╭──────────────────────────────────┬─────────────────────────╮
+│ Command                          │ Description             │
+├──────────────────────────────────┼─────────────────────────┤
+│ General                          │                         │
+│ hello                            │ Greet the bot           │
+│ help                             │ Show this table         │
+│ close / exit                     │ Exit the program        │
+├──────────────────────────────────┼─────────────────────────┤
+│ Contacts                         │                         │
+│ add <name> <phone>               │ Add a new contact       │
+│ change <name> <old> <new>        │ Change a phone number   │
+│ phone <name>                     │ Show phone number(s)    │
+│ all                              │ Show all contacts       │
+│ search <query>                   │ Search contacts         │
+│ delete-phone <name> <phone>      │ Delete a phone          │
+├──────────────────────────────────┼─────────────────────────┤
+│ Birthday                         │                         │
+│ add-birthday <name> <DD.MM.YYYY> │ Add or update birthday  │
+│ show-birthday <name>             │ Show birthday           │
+│ birthdays <days>                 │ Upcoming birthdays      │
+├──────────────────────────────────┼─────────────────────────┤
+│ Address & Email                  │                         │
+│ add-address <name> <address>     │ Add address             │
+│ change-address <name> <address>  │ Change address          │
+│ delete-address <name>            │ Delete address          │
+│ add-email <name> <email>         │ Add email               │
+│ show-email <name>                │ Show email              │
+│ change-email <name> <email>      │ Change email            │
+│ delete-email <name>              │ Delete email            │
+├──────────────────────────────────┼─────────────────────────┤
+│ Notes                            │                         │
+│ add-note <text>                  │ Add a new note          │
+│ show-notes                       │ Show all notes          │
+│ sort-notes                       │ Sort and show notes     │
+│ find-note <keyword>              │ Search notes by keyword │
+│ search-tag <tag>                 │ Search notes by tag     │
+│ edit-note <number> <text>        │ Edit a note             │
+│ delete-note <number>             │ Delete a note           │
+╰──────────────────────────────────┴─────────────────────────╯"""
