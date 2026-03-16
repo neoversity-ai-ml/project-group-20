@@ -34,18 +34,18 @@ def test_contacts_management(capsys, monkeypatch):
         (
             "all",
             dedent("""\
-                Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com
-                Contact name: Jane, phones: 3987654321"""),
+Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email:\njohn.doe@example.com
+Contact name: Jane, phones: 3987654321"""),
         ),
         ("search Jane", "Contact name: Jane, phones: 3987654321"),
         ("search 3987654321", "Contact name: Jane, phones: 3987654321"),
         (
             "search Elm",
-            "Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com",
+            "Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email:\njohn.doe@example.com",
         ),
         (
             "search john.doe@example.com",
-            "Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email: john.doe@example.com",
+            "Contact name: John, phones: -, birthday: 01.01.1990, address: 456 Elm St, email:\njohn.doe@example.com",
         ),
         ("delete-address John", "Address removed."),
         ("delete-email John", "Email removed."),

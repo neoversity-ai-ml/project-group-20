@@ -52,7 +52,7 @@ def test_error_handling(capsys, monkeypatch):
         ("add Jane 1111111111", "Phone number cannot consist of all identical digits."),
         (
             "add Jane 1234567890123456",
-            "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or parentheses.",
+            "Phone number must be 7-15 digits, optionally with +, spaces, dashes, or \nparentheses.",
         ),
         ("delete-phone Bob 1234567891", "Phone number not found."),
         (

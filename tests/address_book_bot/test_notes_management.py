@@ -29,10 +29,10 @@ def test_notes_management(capsys, monkeypatch):
         (
             "sort-notes",
             dedent("""\
-                1. [bye] Bye.
-                2. [homework, програмування, python] My homework з програмування на Python almost done.
-                3. [python, learning, fun] Python Python Python! Learning Python is fun. Best Python course.
-                4. [python, language] Python is a language."""),
+                1.  Bye.
+                2.  My homework з програмування на Python almost done.
+                3.  Python Python Python! Learning Python is fun. Best Python course.
+                4.  Python is a language."""),
         ),
         (
             "search-tag python",
