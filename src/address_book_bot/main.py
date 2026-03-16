@@ -4,9 +4,7 @@ from address_book_bot.models import AddressBook
 from address_book_bot.ui import console, print_commands_table, print_error, print_info, print_success
 from address_book_bot.utils import parse_input
 
-_ERROR_PHRASES = (
-    "not found", "invalid", "please provide", "cannot", "must be", "already"
-)
+_ERROR_PHRASES = ("not found", "invalid", "please provide", "cannot", "must be", "already")
 
 
 def _is_error(msg: str) -> bool:
