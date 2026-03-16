@@ -1,4 +1,4 @@
-Output demo/demo_short.gif
+Output demo/demo_short_colored.gif
 
 Set Padding 10
 Set TypingSpeed 50ms
