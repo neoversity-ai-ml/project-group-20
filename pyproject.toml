@@ -2,7 +2,7 @@
 name = "address-book-bot"
 version = "0.1.0"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["rich"]
 
 [project.scripts]
 address-book-bot = "address_book_bot.main:main"

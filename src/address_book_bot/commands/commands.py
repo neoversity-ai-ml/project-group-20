@@ -24,6 +24,7 @@ from address_book_bot.commands.handlers.note_handlers import (
     sort_notes,
 )
 from address_book_bot.commands.resolvers import CommandResolver, FuzzyCommandResolver
+from address_book_bot.ui import print_commands_table
 
 command_resolver = CommandResolver(
     [
@@ -83,7 +84,8 @@ def hello(_args, _book):
 
 
 def help_command(_args, _book):
-    return DESCRIPTION_TEXT
+    print_commands_table()
+    return None
 
 
 COMMANDS = {
